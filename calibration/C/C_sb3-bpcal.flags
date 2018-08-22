@@ -1,0 +1,7 @@
+#
+# flags for Band Pass calibrator SB 1
+#
+scan='1~3'
+antenna='19' spw='6~13' correlation='RR'
+spw='19,21' antenna='6,7,9,12,15,22'
+spw='19' antenna='13'

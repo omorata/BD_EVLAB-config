@@ -1,0 +1,9 @@
+#
+# flags for targets SB
+#
+#
+field='5' spw='4' antenna='0,13,20' timerange='12:15:45~12:15:55'
+field='5' spw='63' antenna='7'
+field='3' spw='18' antenna='7' timerange='11:52:58~11:52:59'
+field='3' spw='37~39' antenna='3,23'
+field='3' spw='43' antenna='13' timerange='11:59:15~11:59:18'

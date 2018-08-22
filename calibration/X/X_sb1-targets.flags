@@ -1,0 +1,11 @@
+#
+# flags for targets SB 1
+#
+#
+field='2~5' spw='12'
+field='3' spw='15~16' scan='9'
+field='5' spw='15~16'
+field='4' spw='14~16'
+#
+#field='2~5' mode='quack' quackinterval=30.0 quackmode='beg'
+#field='2~5' mode='quack' quackinterval=30.0 quackmode='endb'

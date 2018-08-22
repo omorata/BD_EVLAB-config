@@ -1,0 +1,4 @@
+#
+# flags for gain cal. SB 
+#
+antenna='26' spw='34~49'

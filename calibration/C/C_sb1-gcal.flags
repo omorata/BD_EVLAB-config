@@ -1,0 +1,4 @@
+#
+# flags for gain cal. SB 1
+#
+spw='4,19,21'

@@ -1,0 +1,26 @@
+#
+# flags for targets SB 1
+#
+#
+field='2' spw='2' antenna='9,15'
+field='2' spw='3' antenna='15'
+field='3,4' spw='2' antenna='9,12,15,23'
+field='3,4,5' spw='3' antenna='12,15,23'
+field='3,5' spw='4' antenna='6'
+field='4' spw='3' antenna='9'
+field='5' spw='2' antenna='12,15,23'
+field='5' spw='4' antenna='6,9,17,22'
+#
+field='2,3' spw='19,21' antenna='4,9,10,12,13,15,21~23'
+field='2,3' spw='19' antenna='5,7'
+field='2,3' spw='21' antenna='6,18'
+field='2' spw='19,21' antenna='26'
+field='3' spw='19' antenna='26'
+field='4' spw='19,21' antenna='4~6,8~10,12,13,15,18,21~23'
+field='4' spw='19' antenna='7,26'
+field='4' spw='21' antenna='16,20'
+field='5' spw='19,21' antenna='4,5,9,10,12,15,16,18,19,21~23'
+field='5' spw='19' antenna='7,13,26'
+field='5' spw='21' antenna='3,6,8,20'
+#
+field='2~5' spw='28~30' antenna='15,23'

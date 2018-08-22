@@ -1,0 +1,4 @@
+#
+# flags for Band Pass calibrator SB 2
+#
+spw='12~13'

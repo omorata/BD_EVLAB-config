@@ -1,0 +1,4 @@
+#
+# flags for Band Pass calibrator SB 
+#
+antenna='12' spw='39'

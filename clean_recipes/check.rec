@@ -1,0 +1,15 @@
+#index   #command
+# check
+00	 set_check
+01       sb_pl
+02	 show
+05	 sb_img
+06	 show
+08	 mgd_pl
+09	 show
+#	 cntsrc_img
+#	 show
+#	 mgd_pl
+#	 show
+12	 mgd_img
+13	 show

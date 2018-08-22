@@ -1,0 +1,6 @@
+#
+# flags for gain cal. SB 2
+#
+spw='12'
+spw='13' timerange='14:01:30~14:10:00'
+

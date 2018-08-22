@@ -1,0 +1,7 @@
+#
+# flags for targets SB 2
+#
+#
+field='2~5' spw='12'
+scan='6' spw='13'
+scan='7' spw='13' timerange='14:15:49~14:16:00'

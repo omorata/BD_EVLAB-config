@@ -1,0 +1,5 @@
+#
+# flags for Band Pass calibrator SB 
+#
+antenna='9' spw='18~33'
+antenna='11' spw='39:32~63'

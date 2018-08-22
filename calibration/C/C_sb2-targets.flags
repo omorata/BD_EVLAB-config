@@ -1,0 +1,10 @@
+#
+# flags for targets SB 1
+#
+#
+field='2~5' spw='19,21'
+field='2,3' spw='2,3' antenna='9'
+field='2~5' spw='2,3' antenna='12,15'
+field='2~5' spw='28' antenna='15,23'
+field='2~5' spw='30' antenna='15'
+#

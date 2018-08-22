@@ -1,0 +1,7 @@
+#
+# flags for gain cal. SB 1
+#
+antenna='19' spw='6~13' correlation='RR'
+spw='19,21' antenna='4,5,7,10,12,15,22,23'
+spw='19' antenna='13'
+spw='21' antenna='9'

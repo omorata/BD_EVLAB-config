@@ -1,0 +1,5 @@
+#
+# flags for gain cal. SB 
+#
+antenna='15' timerange='14:35:30~14:42:35'
+antenna='20' spw='50~65'

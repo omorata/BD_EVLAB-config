@@ -1,0 +1,4 @@
+#
+# flags for Band Pass calibrator SB 1
+#
+spw='4,19,21'

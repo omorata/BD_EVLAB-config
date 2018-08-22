@@ -1,0 +1,5 @@
+#
+# flags for targets SB
+#
+#
+field='2' antenna='15' spw='49~50'

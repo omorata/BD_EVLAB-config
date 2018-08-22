@@ -1,0 +1,12 @@
+#index   #command
+# re-run
+00       set_wd
+01       sb_pl
+05		 sb_img
+07		 merge_sbs
+08		 mgd_pl
+#		 cntsrc_img
+#		 subt_cntsrc
+#		 mgd_pl
+12		 mgd_img
+14		 pack_res
