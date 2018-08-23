@@ -1,1 +1,0 @@
-# configuration files for the calibration and reduction of the EVLA data of the proto-BD candidates in Taurus

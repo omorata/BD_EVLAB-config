@@ -4,5 +4,5 @@
 RUN_CONFIG = {
     'recipe_file' : 'cfgfiles/rec-C_J041757-avg.rec',
     'run_file' : 'cfgfiles/runs-C_J041757-avg.cfg',
-    'log_file' : 'log-X_J041757-avg'
+    'log_file' : 'log-C_J041757-avg'
 }

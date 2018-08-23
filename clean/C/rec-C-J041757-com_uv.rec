@@ -1,0 +1,8 @@
+#index   #command
+01	 mgd_pl
+#02	 pause
+03	 mgd_drty
+04	 show
+05	 mgd_img
+06	 show
+
