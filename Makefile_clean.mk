@@ -28,7 +28,7 @@ show_plot =  uvwave uv  wt
 
 ##-- Directory set-up --------------------------------------------------
 #
-ROOT_DIR=/almalustre/home/omorata
+ROOT_DIR=/lustre/opsw/work/omoratac
 
 HOME_DIR=$(ROOT_DIR)/$(PRJ_NAME)
 
@@ -40,8 +40,8 @@ DATA_DIR=$(HOME_DIR)/data
 REDC_DIR=$(HOME_DIR)/reduction
 RES_DIR=$(HOME_DIR)/results
 
-SH_DIR=$(BIN_DIR)
-PYTHON_DIR=$(BIN_DIR)
+SH_DIR=$(BIN_DIR)/bash
+PYTHON_DIR=$(BIN_DIR)/python
 CASABIN=casa512
 
 export
@@ -61,7 +61,7 @@ merge-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 
 $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
 	$(SH_DIR)/mk_merge.sh \
-	    -c $(CFG_DIR)/clean/$(1)/merge_sbs-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/merge_sbs-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)  -l $@
 
 
@@ -69,7 +69,7 @@ chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
 
 $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 	$(SH_DIR)/mk_avg.sh  \
-	    -c $(CFG_DIR)/clean/$(1)/chanaverage-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/chanaverage-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)/merged  \
 	    -l $@
 
@@ -79,7 +79,7 @@ chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1
 
 $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 	$(SH_DIR)/mk_avg.sh  \
-	    -c $(CFG_DIR)/clean/$(1)/chanaverage_comb-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)/merged \
 	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
 
@@ -96,7 +96,7 @@ $(3)-$(1)-$(2): $(RES_DIR)/band_$(1)/maps/$(2)/plots-$(1)-$(2)-$(3).png
 
 $(RES_DIR)/band_$(1)/maps/$(2)/plots-$(1)-$(2)-$(3).png:  $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
 	$(SH_DIR)/mk_clean.sh  \
-	    -c $(CFG_DIR)/clean/$(1)/$(1)-$(2).ini \
+	    -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
 	    -o $(RES_DIR)/band_$(1)/maps  \
 	    -a $(3)  \
 	    -w $(RES_DIR)/band_$(1)/merged/ \
@@ -115,7 +115,7 @@ img-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 
 $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
 	$(SH_DIR)/mk_clean.sh  \
-	    -c $(CFG_DIR)/clean/$(1)/$(1)-$(2).ini \
+	    -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
 	    -o $(RES_DIR)/band_$(1)/maps  \
 	    -t $(3)  -r 'ok'  -a 'img'   \
@@ -125,7 +125,7 @@ $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1
 
 view-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 	$(SH_DIR)/mk_clean.sh  \
-	    -c $(CFG_DIR)/clean/$(1)/$(1)-$(2).ini \
+	    -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
 	    -o $(RES_DIR)/band_$(1)/maps  \
 	    -a 'view'   -t $(3) -r 'ok' \
@@ -137,7 +137,7 @@ tofits-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
 
 $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits:  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 	$(SH_DIR)/mk_clean.sh  \
-	    -c $(CFG_DIR)/clean/$(1)/$(1)-$(2).ini \
+	    -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
 	    -o $(RES_DIR)/band_$(1)/maps  \
 	    -a 'tofits'  -t $(3) \
 	    -w $(RES_DIR)/band_$(1)/merged/  \
@@ -147,7 +147,7 @@ $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits:  $(RES_DIR)/band_$(1)/ma
 dirty-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
 
 $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
-	$(SH_DIR)/mk_clean.sh  -c $(CFG_DIR)/clean/$(1)/$(1)-$(2).ini \
+	$(SH_DIR)/mk_clean.sh  -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
 	    -o $(RES_DIR)/band_$(1)/maps  \
 	    -a $(3)  -r 'ok'  -t 'dirty'   \
@@ -175,7 +175,7 @@ combine_prep-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-
 
 $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/clean/$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'prep_data' \
 	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
@@ -185,7 +185,7 @@ combine_viewdata-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewda
 
 $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/clean/$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'viewdata' \
 	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2)
@@ -195,7 +195,7 @@ combine_calc_wt-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt
 
 $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/clean/$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'calc_wt' \
 	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
@@ -204,7 +204,7 @@ combine_concat-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$
 
 $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/clean/$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(CFG_DIR)/clean/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'concat' \
 	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2)
