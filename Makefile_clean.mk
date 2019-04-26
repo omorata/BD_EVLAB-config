@@ -52,11 +52,10 @@ export
 
 ##-- Definition of templates -------------------------------------------
 
+define PrepData_Template
 # templates to prepare the data before the cleaning
 #  the first parameter is the band name, the second the source name
 #
-define PrepData_Template
-
 merge-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 
 $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
@@ -106,11 +105,11 @@ $(RES_DIR)/band_$(1)/maps/$(2)/plots-$(1)-$(2)-$(3).png:  $(RES_DIR)/band_$(1)/m
 endef
 
 
+
+define Clean_Template
 # template to clean data
 #  first parameter - band, second parameter - target, third - action
 #
-define Clean_Template
-
 img-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 
 $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
@@ -158,6 +157,7 @@ $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$
 endef
 
 
+
 define Target_Template
 
 .PHONY: plot_data-$(1)-$(2)
@@ -169,6 +169,8 @@ endef
 
 
 define Combine_Template
+# template to combine data from different configurations
+#
 combine-$(1)-$(2): combine_prep-$(1)-$(2)
 
 combine_prep-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
@@ -210,6 +212,7 @@ $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2): $(RES_DIR)/band_
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2)
 
 endef
+
 ##-- End of definition of templates ------------------------------------
 
 
