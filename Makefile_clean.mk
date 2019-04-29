@@ -113,6 +113,25 @@ define Clean_Template
 # template to clean data
 #  first parameter - band, second parameter - target, third - action
 #
+# It includes the actions:
+#   dirty: to make a dirty map to estimate map rms
+#   img: to clean the map
+#   tofits: to export the cleaned map to fits
+#   view: to view the result of the clean
+#
+dirty-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
+
+$(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
+	$(SH_DIR)/mk_clean.sh  -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
+	    -i $(RES_DIR)/band_$(1)/merged \
+	    -o $(RES_DIR)/band_$(1)/maps  \
+	    -t $(3) \
+            -r 'ok' \
+            -a 'dirty'   \
+	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
+	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
+
+
 img-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 
 $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
@@ -127,18 +146,6 @@ $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1
 	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 
 
-view-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
-	$(SH_DIR)/mk_clean.sh  \
-	    -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
-	    -i $(RES_DIR)/band_$(1)/merged \
-	    -o $(RES_DIR)/band_$(1)/maps  \
-            -t $(3) \
-            -r 'ok' \
-	    -a 'view' \
-	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_view
-
-
 tofits-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
 
 $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits:  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
@@ -151,17 +158,16 @@ $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits:  $(RES_DIR)/band_$(1)/ma
 	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
 
 
-dirty-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
-
-$(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
-	$(SH_DIR)/mk_clean.sh  -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
+view-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+	$(SH_DIR)/mk_clean.sh  \
+	    -c $(CFG_DIR)/clean/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
 	    -o $(RES_DIR)/band_$(1)/maps  \
-	    -t $(3) \
+            -t $(3) \
             -r 'ok' \
-            -a 'dirty'   \
+	    -a 'view' \
 	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
+	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_view
 
 
 endef
