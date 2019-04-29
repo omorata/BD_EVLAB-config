@@ -238,6 +238,8 @@ endef
 .PHONY: chanaverage chanaverage-C chanaverage-X chanaverage-K
 .PHONY: chanaverage-C-J041757 chanaverage-X-J041757 chanaverage-K-J041757
 .PHONY: chanaverage-J041757
+.PHONY: img img-X img-K img-C
+.PHONY: img-X-J041757_avg img-K-J041757_avg img-C-J041757_avg
 
 
 merge: merge-C merge-X merge-K
@@ -255,6 +257,17 @@ chanaverage-X: chanaverage-X-J041757
 chanaverage-K: chanaverage-K-J041757
 
 chanaverage-J041757: chanaverage-C-J041757 chanaverage-X-J041757 chanaverage-K-J041757
+
+
+img: img-X img-K img-C
+
+img-X: img-X-J041757_avg
+img-K: img-K-J041757_avg
+img-C: img-C-J041757_avg
+
+img-X-J041757_avg: img-X-J041757_avg-natural img-X-J041757_avg-rob0 img-X-J041757_avg-uniform
+img-K-J041757_avg: img-K-J041757_avg-natural img-K-J041757_avg-rob0 img-K-J041757_avg-uniform
+img-C-J041757_avg: img-C-J041757_avg-natural img-C-J041757_avg-rob0 img-C-J041757_avg-uniform
 
 
 ## generate rules
