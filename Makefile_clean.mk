@@ -3,7 +3,7 @@
 ##  BD EVLA B
 ##
 ##  O. Morata
-##  2018
+##  2018-2019
 ##
 
 ##-- Project info ------------------------------------------------------
@@ -42,7 +42,9 @@ RES_DIR=$(HOME_DIR)/results
 
 SH_DIR=$(BIN_DIR)/bash
 PYTHON_DIR=$(BIN_DIR)/python
-CASABIN=casa512
+#CASABIN=casa512
+CASABIN=casa
+
 
 export
 
@@ -61,7 +63,8 @@ merge-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
 	$(SH_DIR)/mk_merge.sh \
 	    -c $(CFG_DIR)/clean/band_$(1)/merge_sbs-$(1)-$(2).cfg \
-	    -w $(RES_DIR)/band_$(1)  -l $@
+	    -w $(RES_DIR)/band_$(1) \
+            -l $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 
 
 chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
@@ -70,7 +73,7 @@ $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merg
 	$(SH_DIR)/mk_avg.sh  \
 	    -c $(CFG_DIR)/clean/band_$(1)/chanaverage-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)/merged  \
-	    -l $@
+	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
 
 
 .PHONY: chanaverage_comb-$(1)-$(2)
@@ -216,17 +219,29 @@ endef
 ##-- End of definition of templates ------------------------------------
 
 
-.PHONY: merge merge-C merge-C-J041757
-.PHONY: chanaverage chanaverage-C chanaverage-C-J041757
+.PHONY: merge merge-C merge-X merge-K
+.PHONY: merge-C-J041757 merge-X-J041757 merge-K-J041757
+.PHONY: merge-J041757
+.PHONY: chanaverage chanaverage-C chanaverage-X chanaverage-K
+.PHONY: chanaverage-C-J041757 chanaverage-X-J041757 chanaverage-K-J041757
+.PHONY: chanaverage-J041757
 
-merge: merge-C
+
+merge: merge-C merge-X merge-K
 
 merge-C: merge-C-J041757
+merge-X: merge-X-J041757 
+merge-K: merge-K-J041757 
 
+merge-J041757: merge-C-J041757 merge-X-J041757 merge-K-J041757
 
-chanaverage: chanaverage-C
+chanaverage: chanaverage-C chanaverage-X chanaverage-K
 
 chanaverage-C: chanaverage-C-J041757
+chanaverage-X: chanaverage-X-J041757
+chanaverage-K: chanaverage-K-J041757
+
+chanaverage-J041757: chanaverage-C-J041757 chanaverage-X-J041757 chanaverage-K-J041757
 
 
 ## generate rules
