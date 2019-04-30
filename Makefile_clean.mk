@@ -242,6 +242,9 @@ endef
 .PHONY: img-X-J041757_avg img-K-J041757_avg img-C-J041757_avg
 
 
+all: merge chanaverage img
+
+
 merge: merge-C merge-X merge-K
 
 merge-C: merge-C-J041757
