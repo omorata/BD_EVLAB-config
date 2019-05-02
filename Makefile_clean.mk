@@ -16,11 +16,13 @@ BANDS = C X K
 #SOURCES = J041757 J041836 J041847 J041938
 SOURCES = J041757
 
+# use _i_ for the non-chanaveraged target
+#
 targets = _avg
 #extra_targets-J041836 = _i_ _ccomb
 
 actions = rob0 natural uniform
-#extra_actions-J041757_avg = taper01 taper02 taper03
+#extra_actions-K-J041757_avg = taper01 taper02 taper03
 #actions2 = com_uv_rob0 com_uv_natural com_uv_uniform
 
 show_plot =  uvwave uv  wt
@@ -358,6 +360,9 @@ $(foreach tgt, $(list_of_targets), \
         ) \
         $(eval $(call Target_Template,$(band),$(tgt)))\
         $(foreach action, $(actions),\
+            $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
+        )\
+        $(foreach action, $(extra_actions-$(band)-$(tgt)),\
             $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
         )\
      )\
