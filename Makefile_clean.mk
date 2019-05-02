@@ -16,15 +16,16 @@ BANDS = C X K
 #SOURCES = J041757 J041836 J041847 J041938
 SOURCES = J041757
 
+
 # definition of targets
-#
-#  note: use _i_ for the non-chanaveraged target
+#  (use _i_ for the non-chanaveraged target)
 #
 targets = _avg
 #
 # definition of extra_targets for a source
 #
 #extra_targets-J041836 = _i_ _ccomb
+
 
 actions = rob0 natural uniform
 #
@@ -38,9 +39,12 @@ actions = rob0 natural uniform
 #
 #actions2 = com_uv_rob0 com_uv_natural com_uv_uniform
 
+
 show_plot = uvwave uv  wt
 
+
 result_rules = merge chanaverage img
+#result_rules = merge chanaverage img tofits plot_data maps
 #
 ##-- End of project info -----------------------------------------------
 
@@ -343,8 +347,7 @@ $(foreach src,$(SOURCES),\
 ##-- Rules -------------------------------------------------------------
 
 
-all: merge chanaverage img
-#all: tofits plot_data
+all: $(result_rules)
 
 
 
