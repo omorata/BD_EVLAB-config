@@ -8,7 +8,7 @@
 
 ##-- Project info ------------------------------------------------------
 #
-# project name, general prefix, and bands to process
+# definition of project name, general prefix, bands, and sources
 #
 PRJ_NAME=BD-EVLA_B
 SNAME =protoBDsTau
@@ -16,16 +16,29 @@ BANDS = C X K
 #SOURCES = J041757 J041836 J041847 J041938
 SOURCES = J041757
 
-# use _i_ for the non-chanaveraged target
+# definition of targets
+#
+#  note: use _i_ for the non-chanaveraged target
 #
 targets = _avg
+#
+# definition of extra_targets for a source
+#
 #extra_targets-J041836 = _i_ _ccomb
 
 actions = rob0 natural uniform
+#
+# definition of extra actions for a target
+#
+#extra-actions-J041757_avg = taper00
+#
+# definition of extra actions for a target and band
+#
 #extra_actions-K-J041757_avg = taper01 taper02 taper03
+#
 #actions2 = com_uv_rob0 com_uv_natural com_uv_uniform
 
-show_plot =  uvwave uv  wt
+show_plot = uvwave uv  wt
 
 result_rules = merge chanaverage img
 #
@@ -323,7 +336,6 @@ $(foreach src,$(SOURCES),\
         $(eval list_of_targets += $(src)$(addxx))\
     )\
 )
-$(info $(list_of_targets))
 #
 ##
 
@@ -362,6 +374,9 @@ $(foreach tgt, $(list_of_targets), \
         $(foreach action, $(actions),\
             $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
         )\
+        $(foreach action, $(extra_actions-$(tgt)),\
+            $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
+        )\
         $(foreach action, $(extra_actions-$(band)-$(tgt)),\
             $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
         )\
@@ -383,17 +398,17 @@ help:
 	@echo "     Actions for clean = $(actions)"
 	@echo "       CASA executable = $(CASABIN)"
 	@echo
+	@echo "   General rule structure:"
+	@echo "     make [task][-band/source][-source/targets][-action]"
+	@echo
+	@echo "        where:"
+	@echo "          task: all, merge, chanaverage, dirty, img"
+	@echo
+	@echo "     example:  make img-$(word 1, $(BANDS))-$(word 1, $(list_of_targets))-$(word 1, $(actions))"
+	@echo
 	@echo "   Help options:"
 	@echo "      make help_dirs  -  info on directories"
 	@echo "      make help_rules -  info on defined rules"
-	@echo
-	@echo " General rule structure:"
-	@echo "   make [task][-band/source][-source/targets][-action]"
-	@echo
-	@echo "    where:"
-	@echo "       task: all, merge, chanaverage, dirty, img"
-	@echo
-	@echo "    example:  make img-$(word 1, $(BANDS))-$(word 1, $(list_of_targets))-$(word 1, $(actions))"
 	@echo
 
 
