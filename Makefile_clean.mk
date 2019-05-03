@@ -31,6 +31,7 @@ targets = _avg
 # definition of weights for cleaning
 #
 weights = rob0 natural uniform
+#weights = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
 #
 # definition of extra weights for a target
 #
@@ -39,8 +40,6 @@ weights = rob0 natural uniform
 # definition of extra weights for a target and band
 #
 #extra_weights-K-J041757_avg = taper01 taper02 taper03
-#
-#weights = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
 
 
 show_plot = uvwave uv  wt
@@ -69,12 +68,10 @@ RES_DIR=$(HOME_DIR)/results
 
 SH_DIR=$(BIN_DIR)/bash
 PYTHON_DIR=$(BIN_DIR)/python
-#CASABIN=casa512
 CASABIN=casa
 
 
 export
-
 
 
 ##-- End of directory set-up -------------------------------------------
@@ -93,13 +90,15 @@ merge-$(1): merge-$(1)-$(2)
 
 merge-$(2): merge-$(1)-$(2)
 
-merge-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 
-$(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
+LOG_MERGE =  $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+merge-$(1)-$(2): $(LOG_MERGE)
+
+$(LOG_MERGE) :
 	$(SH_DIR)/mk_merge.sh \
 	    -c $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1) \
-            -l $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+            -l $(LOG_MERGE)
 
 
 .PHONY: chanaverage-$(1) chanaverage-$(2)
@@ -108,13 +107,14 @@ $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
 chanaverage-$(1): chanaverage-$(1)-$(2)
 chanaverage-$(2): chanaverage-$(1)-$(2)
 
-chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
+LOG_CHANAVG = $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
+chanaverage-$(1)-$(2): $(LOG_CHANAVG)
 
-$(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+$(LOG_CHANAVG) : $(LOG_MERGE)
 	$(SH_DIR)/mk_avg.sh  \
 	    -c $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)/merged  \
-	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
+	    -l $(LOG_CHANAVG)
 
 
 .PHONY: chanaverage_comb-$(1)-$(2)
@@ -392,7 +392,9 @@ $(foreach tgt, $(list_of_targets), \
 )
 
 
+
 .PHONY: help help_dirs help_rules
+
 help:
 	@echo
 	@echo " Makefile to clean data of $(PRJ_NAME)"
@@ -437,8 +439,9 @@ help_dirs:
 
 
 list:
+# lists all the rules in the Makefile
+#
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
 ##
 ## End of rules --------------------------------------------------------
-
