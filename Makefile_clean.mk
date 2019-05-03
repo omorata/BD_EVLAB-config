@@ -21,12 +21,15 @@ SOURCES = J041757
 #  (use _i_ for the non-chanaveraged target)
 #
 targets = _avg
+#targets = _avg _comb
 #
 # definition of extra_targets for a source
 #
 #extra_targets-J041836 = _i_ _ccomb
 
 
+# definition of actions for cleaning
+#
 actions = rob0 natural uniform
 #
 # definition of extra actions for a target
@@ -37,12 +40,14 @@ actions = rob0 natural uniform
 #
 #extra_actions-K-J041757_avg = taper01 taper02 taper03
 #
-#actions2 = com_uv_rob0 com_uv_natural com_uv_uniform
+#actions = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
 
 
 show_plot = uvwave uv  wt
 
 
+# definition of tasks for all
+#
 result_rules = merge chanaverage img
 #result_rules = merge chanaverage img tofits plot_data maps
 #
