@@ -166,9 +166,10 @@ define Clean_Template
 
 dirty-$(1)-$(2):  dirty-$(1)-$(2)-$(3)
 
-dirty-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
+LOG_DIRTY = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
+dirty-$(1)-$(2)-$(3): $(LOG_DIRTY)
 
-$(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
+$(LOG_DIRTY) : $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
 	$(SH_DIR)/mk_clean.sh  -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
 	    -o $(RES_DIR)/band_$(1)/maps  \
@@ -176,7 +177,7 @@ $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$
             -r 'ok' \
             -a 'dirty'   \
 	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
+	    -l $(LOG_DIRTY)
 
 
 .PHONY: img-$(1)-$(2)
@@ -184,9 +185,10 @@ $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty: $(RES_DIR)/band_$
 
 img-$(1)-$(2):  img-$(1)-$(2)-$(3)
 
-img-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+LOG_IMG = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+img-$(1)-$(2)-$(3): $(LOG_IMG)
 
-$(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
+$(LOG_IMG) : $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
@@ -195,12 +197,13 @@ $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img: $(RES_DIR)/band_$(1
             -r 'ok'\
             -a 'img'   \
 	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+	    -l $(LOG_IMG)
 
 
-tofits-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
+OUTFITS = $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
+tofits-$(1)-$(2)-$(3): $(OUTFITS)
 
-$(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits:  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+$(OUTFITS):  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
 	    -o $(RES_DIR)/band_$(1)/maps  \
@@ -210,7 +213,8 @@ $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits:  $(RES_DIR)/band_$(1)/ma
 	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
 
 
-view-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+LOG_VIEW = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+view-$(1)-$(2)-$(3): $(LOG_VIEW)
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
 	    -i $(RES_DIR)/band_$(1)/merged \
@@ -219,7 +223,7 @@ view-$(1)-$(2)-$(3): $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
             -r 'ok' \
 	    -a 'view' \
 	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_view
+	    -l $(LOG_VIEW)
 
 
 endef
