@@ -28,19 +28,19 @@ targets = _avg
 #extra_targets-J041836 = _i_ _ccomb
 
 
-# definition of actions for cleaning
+# definition of weights for cleaning
 #
-actions = rob0 natural uniform
+weights = rob0 natural uniform
 #
-# definition of extra actions for a target
+# definition of extra weights for a target
 #
-#extra-actions-J041757_avg = taper00
+#extra-weights-J041757_avg = taper00
 #
-# definition of extra actions for a target and band
+# definition of extra weights for a target and band
 #
-#extra_actions-K-J041757_avg = taper01 taper02 taper03
+#extra_weights-K-J041757_avg = taper01 taper02 taper03
 #
-#actions = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
+#weights = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
 
 
 show_plot = uvwave uv  wt
@@ -153,9 +153,9 @@ endef
 
 define Clean_Template
 # template to clean data
-#  first parameter - band, second parameter - target, third - action
+#  first parameter - band, second parameter - target, third - weight
 #
-# It includes the actions:
+# It includes the weights:
 #   dirty: to make a dirty map to estimate map rms
 #   img: to clean the map
 #   tofits: to export the cleaned map to fits
@@ -227,7 +227,7 @@ endef
 
 
 define Target_Template
-# Template to create combinations of actions for targets and bands
+# Template to create combinations of weights for targets and bands
 #
 # first parameter - band, second parameter - target
 #
@@ -299,7 +299,7 @@ endef
 
 
 define Template_OnlyTarget
-# Template to create combination of actions only for targets
+# Template to create combination of weights only for targets
 #
 #  parameter - target
 #
@@ -315,7 +315,7 @@ endef
 
 
 define Template_Sources
-# Template to create combination of actions only for sources
+# Template to create combination of weights only for sources
 #
 #  parameter - source
 #
@@ -379,14 +379,14 @@ $(foreach tgt, $(list_of_targets), \
             $(eval plot_list-$(band)_$(tgt) += plot_data-$(band)-$(tgt)-$(plot))\
         ) \
         $(eval $(call Target_Template,$(band),$(tgt)))\
-        $(foreach action, $(actions),\
-            $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
+        $(foreach wt, $(weights),\
+            $(eval $(call Clean_Template,$(band),$(tgt),$(wt)))\
         )\
-        $(foreach action, $(extra_actions-$(tgt)),\
-            $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
+        $(foreach wt, $(extra_weights-$(tgt)),\
+            $(eval $(call Clean_Template,$(band),$(tgt),$(wt)))\
         )\
-        $(foreach action, $(extra_actions-$(band)-$(tgt)),\
-            $(eval $(call Clean_Template,$(band),$(tgt),$(action)))\
+        $(foreach wt, $(extra_weights-$(band)-$(tgt)),\
+            $(eval $(call Clean_Template,$(band),$(tgt),$(wt)))\
         )\
      )\
 )
@@ -403,16 +403,16 @@ help:
 	@echo "       Frequency bands = $(BANDS)"
 	@echo "               Sources = $(SOURCES)"
 	@echo "               Targets = $(list_of_targets)"
-	@echo "     Actions for clean = $(actions)"
+	@echo "     Weights for clean = $(weights)"
 	@echo "       CASA executable = $(CASABIN)"
 	@echo
 	@echo "   General rule structure:"
-	@echo "     make [task][-band/source][-source/targets][-action]"
+	@echo "     make [task][-band/source][-source/targets][-weight]"
 	@echo
 	@echo "        where:"
 	@echo "          task: all, merge, chanaverage, dirty, img"
 	@echo
-	@echo "     example:  make img-$(word 1, $(BANDS))-$(word 1, $(list_of_targets))-$(word 1, $(actions))"
+	@echo "     example:  make img-$(word 1, $(BANDS))-$(word 1, $(list_of_targets))-$(word 1, $(weights))"
 	@echo
 	@echo "   Help options:"
 	@echo "      make help_dirs  -  info on directories"
