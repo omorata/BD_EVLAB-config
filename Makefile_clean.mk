@@ -101,6 +101,7 @@ $(LOG_MERGE) :
             -l $(LOG_MERGE)
 
 
+
 .PHONY: chanaverage-$(1) chanaverage-$(2)
 .PHONY: chanaverage-$(1)-$(2)
 
@@ -117,6 +118,7 @@ $(LOG_CHANAVG) : $(LOG_MERGE)
 	    -l $(LOG_CHANAVG)
 
 
+
 .PHONY: chanaverage_comb-$(1)-$(2)
 
 chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
@@ -126,7 +128,6 @@ $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)
 	    -c $(CFG_DIR)/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)/merged \
 	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
-
 
 endef
 
@@ -146,7 +147,6 @@ $(RES_DIR)/band_$(1)/maps/$(2)/plots-$(1)-$(2)-$(3).png:  $(RES_DIR)/band_$(1)/m
 	    -w $(RES_DIR)/band_$(1)/merged/ \
 	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)_view
 
-
 endef
 
 
@@ -155,8 +155,8 @@ define Clean_Template
 # template to clean data
 #  first parameter - band, second parameter - target, third - weight
 #
-# It includes the weights:
-#   dirty: to make a dirty map to estimate map rms
+# It includes the actions:
+#   dirty: to make a dirty map to estimate the map rms
 #   img: to clean the map
 #   tofits: to export the cleaned map to fits
 #   view: to view the result of the clean
@@ -180,6 +180,7 @@ $(LOG_DIRTY) : $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
 	    -l $(LOG_DIRTY)
 
 
+
 .PHONY: img-$(1)-$(2)
 .PHONY: img-$(1)-$(2)-$(3)
 
@@ -194,16 +195,19 @@ $(LOG_IMG) : $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
 	    -i $(RES_DIR)/band_$(1)/merged \
 	    -o $(RES_DIR)/band_$(1)/maps  \
 	    -t $(3) \
-            -r 'ok'\
-            -a 'img'   \
+            -r 'ok' \
+            -a 'img'  \
 	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
 	    -l $(LOG_IMG)
 
 
-OUTFITS = $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
-tofits-$(1)-$(2)-$(3): $(OUTFITS)
 
-$(OUTFITS):  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+.PHONY: tofits-$(1)-$(2)-$(3)
+
+OUT_FITS = $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
+tofits-$(1)-$(2)-$(3): $(OUT_FITS)
+
+$(OUT_FITS):  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
 	    -o $(RES_DIR)/band_$(1)/maps  \
@@ -213,7 +217,9 @@ $(OUTFITS):  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
 	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
 
 
+
 LOG_VIEW = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+
 view-$(1)-$(2)-$(3): $(LOG_VIEW)
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
@@ -224,7 +230,6 @@ view-$(1)-$(2)-$(3): $(LOG_VIEW)
 	    -a 'view' \
 	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
 	    -l $(LOG_VIEW)
-
 
 endef
 
@@ -270,6 +275,7 @@ $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2): $(RES_DIR)/band_$(
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
 
 
+
 combine_viewdata-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2)
 
 $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
@@ -280,6 +286,7 @@ $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2): $(RES_DIR)/ban
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2)
 
 
+
 combine_calc_wt-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
 
 $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
@@ -288,6 +295,8 @@ $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2): $(RES_DIR)/band
 	    -s 'calc_wt' \
 	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
 	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
+
+
 
 combine_concat-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2)
 
