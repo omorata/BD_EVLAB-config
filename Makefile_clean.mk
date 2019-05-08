@@ -581,7 +581,8 @@ help:
 	@echo "        where:"
 	@echo "          task: all, merge, chanaverage, dirty, img"
 	@echo
-	@echo "     example:  make img-$(word 1, $(BANDS))-$(word 1, $(list_of_targets))-$(word 1, $(weights))"
+	@echo "     example:  make img-$(word 1, $(BANDS))-$(word 1, $\
+                $(list_of_targets))-$(word 1, $(weights))"
 	@echo
 	@echo "   Help options:"
 	@echo "      make help_dirs  -  info on directories"
@@ -608,7 +609,10 @@ help_dirs:
 list:
 # lists all the rules in the Makefile
 #
-	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
+	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | \
+           awk -v RS= -F: '/^# File/,/^# Finished Make data base/ \
+               {if ($$1 !~ "^[#.]") {print $$1}}' | sort | \
+           egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
 ##
 ## End of rules --------------------------------------------------------
