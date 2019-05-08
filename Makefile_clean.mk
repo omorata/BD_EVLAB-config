@@ -508,20 +508,20 @@ all: $(result_rules)
 #
 # merge
 #
-$(foreach mgsrc, $(list_merge),\
-    $(eval $(call Merge_Sources,$(mgsrc)))\
-    $(foreach band, $(BANDS),\
-        $(eval $(call Merge_Template,$(band),$(mgsrc)))\
-    )\
+$(foreach mgsrc, $(list_merge), \
+    $(eval $(call Merge_Sources,$(mgsrc))) \
+    $(foreach band, $(BANDS), \
+        $(eval $(call Merge_Template,$(band),$(mgsrc))) \
+    ) \
 )
 
 # chanaverage
 #
-$(foreach avsrc, $(list_avg),\
-    $(eval $(call ChanAvg_Sources,$(avsrc)))\
-    $(foreach avband, $(BANDS),\
-        $(eval $(call ChanAvg_Template,$(avband),$(avsrc)))\
-    )\
+$(foreach avsrc, $(list_avg), \
+    $(eval $(call ChanAvg_Sources,$(avsrc))) \
+    $(foreach avband, $(BANDS), \
+        $(eval $(call ChanAvg_Template,$(avband),$(avsrc))) \
+    ) \
 )
 
 #$(foreach src, $(SOURCES),\
@@ -560,7 +560,7 @@ $(foreach tgt, $(list_of_targets), \
 
 
 
-.PHONY: help help_dirs help_rules
+.PHONY: help help_dirs help_rules list
 
 help:
 	@echo
@@ -590,6 +590,7 @@ help:
 	@echo
 
 
+
 help_dirs:
 	@echo
 	@echo " Directory set-up:"
@@ -604,6 +605,7 @@ help_dirs:
 	@echo "      reduction : $(REDC_DIR)"
 	@echo "        results : $(RES_DIR)"
 	@echo
+
 
 
 list:
