@@ -10,27 +10,60 @@
 #
 # definition of project name, general prefix, bands, and sources
 #
-PRJ_NAME=BD-EVLA_B
-SNAME =protoBDsTau
+PRJ_NAME := BD-EVLA_B
+SNAME := protoBDsTau
 BANDS = C X K
 #SOURCES = J041757 J041836 J041847 J041938
 SOURCES = J041757
 
 
-# definition of targets
-#  (use _i_ for the non-chanaveraged target)
+# Definition of targets
 #
-targets = _avg
-#targets = _avg _comb
+# for merging, combining data from two configurations, for averaging
 #
+# suffixes
+#
+suf_merge := 
+suf_avg := _avg 
+#suf_comb = _evlaBC
+
+# sources where to merge SBs
+#
+list_merge := $(SOURCES)
+merged := $(foreach f,$(list_merge), $(addsuffix $(suf_merge),$(f)))
+
+# source where to combine data from configurations
+#
+#list_comb = 
+#combd = $(foreach f,$(list_comb), $(addsuffix $(suf_comb),$(f)))
+
+# sources where to average channels
+#
+list_avg := $(merged)
+avgd := $(foreach av,$(suf_avg),\
+             $(foreach f,$(list$(av)),$(addsuffix $(av),$(f))))
+
+
+#targets = _avg
+
+list_of_targets := $(avgd) 
+
 # definition of extra_targets for a source
 #
-#extra_targets-J041836 = _i_ _ccomb
+#extra_target-J041836 = _xcd
+#extrad = $(foreach src,$(SOURCES),$(foreach xx,$(extra_target-$(src)),\
+#               $(addsuffix $(xx),$(src))))
+
+#list_of_targets = $(avgd)$(combd)$(extrad)
+
+#$(info $(list_merge))
+#$(info $(list_avg))
+#$(info $(list_of_targets))
 
 
 # definition of weights for cleaning
 #
-weights = rob0 natural uniform
+weights := rob0 natural uniform
 #weights = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
 #
 # definition of extra weights for a target
@@ -42,33 +75,33 @@ weights = rob0 natural uniform
 #extra_weights-K-J041757_avg = taper01 taper02 taper03
 
 
-show_plot = uvwave uv  wt
+show_plot := uvwave uv  wt
 
 
 # definition of tasks for all
 #
-result_rules = merge chanaverage img
+result_rules := merge chanaverage img
 #result_rules = merge chanaverage img tofits plot_data maps
 #
 ##-- End of project info -----------------------------------------------
 
 ##-- Directory set-up --------------------------------------------------
 #
-ROOT_DIR=/lustre/opsw/work/omoratac
+ROOT_DIR := /lustre/opsw/work/omoratac
 
-HOME_DIR=$(ROOT_DIR)/$(PRJ_NAME)
+HOME_DIR := $(ROOT_DIR)/$(PRJ_NAME)
 
 # names of directories to use
 #
-BIN_DIR=$(HOME_DIR)/scripts
-CFG_DIR=$(HOME_DIR)/config/clean
-DATA_DIR=$(HOME_DIR)/data
-REDC_DIR=$(HOME_DIR)/reduction
-RES_DIR=$(HOME_DIR)/results
+BIN_DIR := $(HOME_DIR)/scripts
+CFG_DIR := $(HOME_DIR)/config/clean
+DATA_DIR := $(HOME_DIR)/data
+REDC_DIR := $(HOME_DIR)/reduction
+RES_DIR := $(HOME_DIR)/results
 
-SH_DIR=$(BIN_DIR)/bash
-PYTHON_DIR=$(BIN_DIR)/python
-CASABIN=casa
+SH_DIR := $(BIN_DIR)/bash
+PYTHON_DIR := $(BIN_DIR)/python
+CASABIN := casa
 
 
 export
@@ -79,57 +112,105 @@ export
 
 ##-- Definition of templates -------------------------------------------
 
-define PrepData_Template
+define Merge_Template
 # templates to prepare the data before the cleaning
 #  the first parameter is the band name, the second the source name
 #
 .PHONY: merge-$(1) merge-$(2)
 .PHONY: merge-$(1)-$(2)
 
+$(eval LOG_MERGE := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
+
 merge-$(1): merge-$(1)-$(2)
 
 merge-$(2): merge-$(1)-$(2)
 
-
-LOG_MERGE =  $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
 merge-$(1)-$(2): $(LOG_MERGE)
 
-$(LOG_MERGE) :
+$(LOG_MERGE):
 	$(SH_DIR)/mk_merge.sh \
 	    -c $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1) \
             -l $(LOG_MERGE)
+endef
 
 
+
+define ChanAvg_Template
+# templates to prepare the data before the cleaning
+#  the first parameter is the band name, the second the source name
+#
 
 .PHONY: chanaverage-$(1) chanaverage-$(2)
 .PHONY: chanaverage-$(1)-$(2)
 
+$(eval LOG_MERGE := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
+$(eval LOG_CHANAVG := $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2))
+
 chanaverage-$(1): chanaverage-$(1)-$(2)
 chanaverage-$(2): chanaverage-$(1)-$(2)
 
-LOG_CHANAVG = $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
 chanaverage-$(1)-$(2): $(LOG_CHANAVG)
 
-$(LOG_CHANAVG) : $(LOG_MERGE)
+$(LOG_CHANAVG): $(LOG_MERGE)
 	$(SH_DIR)/mk_avg.sh  \
 	    -c $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1)/merged  \
 	    -l $(LOG_CHANAVG)
 
-
-
-.PHONY: chanaverage_comb-$(1)-$(2)
-
-chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
-
-$(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
-	$(SH_DIR)/mk_avg.sh  \
-	    -c $(CFG_DIR)/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
-	    -w $(RES_DIR)/band_$(1)/merged \
-	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
-
 endef
+
+
+
+#define PrepData_Template
+# templates to prepare the data before the cleaning
+#  the first parameter is the band name, the second the source name
+#
+#.PHONY: merge-$(1) merge-$(2)
+#.PHONY: merge-$(1)-$(2)
+#
+#merge-$(1): merge-$(1)-$(2)
+#
+#merge-$(2): merge-$(1)-$(2)
+#
+#
+#merge-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+#
+#$(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
+#	$(SH_DIR)/mk_merge.sh \
+#	    -c $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg \
+#	    -w $(RES_DIR)/band_$(1) \
+#            -l $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+#
+#
+#
+#.PHONY: chanaverage-$(1) chanaverage-$(2)
+#.PHONY: chanaverage-$(1)-$(2)
+#
+#chanaverage-$(1): chanaverage-$(1)-$(2)
+#chanaverage-$(2): chanaverage-$(1)-$(2)
+#
+#chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
+#
+#$(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+#	$(SH_DIR)/mk_avg.sh  \
+#	    -c $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg \
+#	    -w $(RES_DIR)/band_$(1)/merged  \
+#	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
+
+
+
+#.PHONY: chanaverage_comb-$(1)-$(2)
+#
+#chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
+#
+#$(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
+#	$(SH_DIR)/mk_avg.sh  \
+#	    -c $(CFG_DIR)/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
+#	    -w $(RES_DIR)/band_$(1)/merged \
+#	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
+#
+#endef
 
 
 
@@ -161,75 +242,81 @@ define Clean_Template
 #   tofits: to export the cleaned map to fits
 #   view: to view the result of the clean
 #
+$(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
+$(eval map_dir := $(RES_DIR)/band_$(1)/maps)
+
+
 .PHONY: dirty-$(1)-$(2)
 .PHONY: dirty-$(1)-$(2)-$(3)
 
-dirty-$(1)-$(2):  dirty-$(1)-$(2)-$(3)
+$(eval log_dirty := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_dirty)
 
-LOG_DIRTY = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_dirty
-dirty-$(1)-$(2)-$(3): $(LOG_DIRTY)
+dirty-$(1)-$(2): dirty-$(1)-$(2)-$(3)
 
-$(LOG_DIRTY) : $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
-	$(SH_DIR)/mk_clean.sh  -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
-	    -i $(RES_DIR)/band_$(1)/merged \
-	    -o $(RES_DIR)/band_$(1)/maps  \
+dirty-$(1)-$(2)-$(3): $(log_dirty)
+
+$(log_dirty): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
+	$(SH_DIR)/mk_clean.sh \
+            -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
+	    -i $(mrg_dir) \
+	    -o $(map_dir)  \
 	    -t $(3) \
             -r 'ok' \
             -a 'dirty'   \
-	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(LOG_DIRTY)
+	    -w $(map_dir)/$(2) \
+	    -l $(log_dirty)
 
 
 
 .PHONY: img-$(1)-$(2)
 .PHONY: img-$(1)-$(2)-$(3)
 
+$(eval log_img := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_img)
+
 img-$(1)-$(2):  img-$(1)-$(2)-$(3)
 
-LOG_IMG = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
-img-$(1)-$(2)-$(3): $(LOG_IMG)
+img-$(1)-$(2)-$(3): $(log_img)
 
-$(LOG_IMG) : $(RES_DIR)/band_$(1)/merged/$(SNAME)-$(1)-$(2).ms
+$(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
-	    -i $(RES_DIR)/band_$(1)/merged \
-	    -o $(RES_DIR)/band_$(1)/maps  \
+	    -i $(mrg_dir) \
+	    -o $(map_dir)  \
 	    -t $(3) \
             -r 'ok' \
             -a 'img'  \
-	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(LOG_IMG)
+	    -w $(map_dir)/$(2) \
+	    -l $(log_img)
 
 
 
 .PHONY: tofits-$(1)-$(2)-$(3)
 
-OUT_FITS = $(RES_DIR)/band_$(1)/maps/$(2)/img-$(1)-$(2)-$(3).fits
+$(eval OUT_FITS := $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits)
+
 tofits-$(1)-$(2)-$(3): $(OUT_FITS)
 
-$(OUT_FITS):  $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
+$(OUT_FITS):  $(log_img)
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
-	    -o $(RES_DIR)/band_$(1)/maps  \
+	    -o $(map_dir) \
             -t $(3) \
 	    -a 'tofits' \
-	    -w $(RES_DIR)/band_$(1)/merged/  \
-	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
+	    -w $(mrg_dir) \
+	    -l $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
 
 
 
-LOG_VIEW = $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)-$(3)_img
-
-view-$(1)-$(2)-$(3): $(LOG_VIEW)
+view-$(1)-$(2)-$(3): $(log_img)
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
-	    -i $(RES_DIR)/band_$(1)/merged \
-	    -o $(RES_DIR)/band_$(1)/maps  \
+	    -i $(mrg_dir) \
+	    -o $(map_dir) \
             -t $(3) \
             -r 'ok' \
 	    -a 'view' \
-	    -w $(RES_DIR)/band_$(1)/maps/$(2) \
-	    -l $(LOG_VIEW)
+	    -w $(map_dir)/$(2) \
+	    -l $(map_dir)/$(2)/log_view-$(1)-$(2)-$(3)
 
 endef
 
@@ -324,22 +411,50 @@ dirty: dirty-$(1)  ## make dirty map of dirty-$$(1)
 .PHONY: img
 
 img: img-$(1)
+
 endef
 
 
-define Template_Sources
-# Template to create combination of weights only for sources
+
+define Merge_Sources
+# Template to create merge list for sources
 #
 #  parameter - source
 #
 .PHONY: merge
-.PHONY: chanaverage
 
 merge: merge-$(1)
+
+endef
+
+
+
+define ChanAvg_Sources
+# Template to create chanavg list for sources
+#
+#  parameter - source
+#
+.PHONY: chanaverage
 
 chanaverage: chanaverage-$(1)
 
 endef
+
+
+
+#define Template_Sources
+# Template to create combination of weights only for sources
+#
+#  parameter - source
+#
+#.PHONY: merge
+#.PHONY: chanaverage
+#
+#merge: merge-$(1)
+#
+#chanaverage: chanaverage-$(1)
+#
+#endef
 
 #
 #-- End of definition of templates ------------------------------------
@@ -347,17 +462,18 @@ endef
 
 # Define list of targets
 #
-list_of_targets =
-$(foreach src,$(SOURCES),\
-    $(foreach tg,$(targets),\
-        $(eval tgt = $(subst _i_,,$(tg)))\
-        $(eval list_of_targets += $(src)$(tgt))\
-    )\
-    $(foreach xx,$(extra_targets-$(src)),\
-        $(eval addxx = $(subst _i_,,$(xx)))\
-        $(eval list_of_targets += $(src)$(addxx))\
-    )\
-)
+#list_of_targets = $(list_tgtm)
+#list_of_targets = 
+#$(foreach src,$(SOURCES),\
+#    $(foreach tg,$(targets),\
+#        $(eval tgt = $(subst _@,,$(tg)))\
+#        $(eval list_of_targets += $(src)$(tgt))\
+#    )\
+#    $(foreach xx,$(extra_targets-$(src)),\
+#        $(eval addxx = $(subst _@,,$(xx)))\
+#        $(eval list_of_targets += $(src)$(addxx))\
+#    )\
+#)
 #
 ##
 
@@ -369,15 +485,33 @@ all: $(result_rules)
 
 
 
-# for sources
+# For sources
 #
-$(foreach src, $(SOURCES),\
-    $(eval $(call Template_Sources,$(src)))\
+# merge
+#
+$(foreach mgsrc, $(list_merge),\
+    $(eval $(call Merge_Sources,$(mgsrc)))\
     $(foreach band, $(BANDS),\
-        $(eval $(call PrepData_Template,$(band),$(src)))\
-        $(eval $(call Combine_Template,$(band),$(src)))\
+        $(eval $(call Merge_Template,$(band),$(mgsrc)))\
     )\
 )
+
+# chanaverage
+#
+$(foreach avsrc, $(list_avg),\
+    $(eval $(call ChanAvg_Sources,$(avsrc)))\
+    $(foreach avband, $(BANDS),\
+        $(eval $(call ChanAvg_Template,$(avband),$(avsrc)))\
+    )\
+)
+
+#$(foreach src, $(SOURCES),\
+#    $(eval $(call Template_Sources,$(src)))\
+#    $(foreach band, $(BANDS),\
+#        $(eval $(call PrepData_Template,$(band),$(src)))\
+#        $(eval $(call Combine_Template,$(band),$(src)))\
+#    )\
+#)
 
 
 
