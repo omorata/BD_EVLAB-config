@@ -12,9 +12,10 @@
 #
 PRJ_NAME := BD-EVLA_B
 SNAME := protoBDsTau
-BANDS = C X K
+BANDS := C X K
 #SOURCES = J041757 J041836 J041847 J041938
-SOURCES = J041757
+SOURCES := J041757
+
 
 
 # Definition of targets
@@ -27,15 +28,18 @@ suf_merge :=
 suf_avg := _avg 
 #suf_comb = _evlaBC
 
+
 # sources where to merge SBs
 #
 list_merge := $(SOURCES)
 merged := $(foreach f,$(list_merge), $(addsuffix $(suf_merge),$(f)))
 
+
 # source where to combine data from configurations
 #
 #list_comb = 
 #combd = $(foreach f,$(list_comb), $(addsuffix $(suf_comb),$(f)))
+
 
 # sources where to average channels
 #
@@ -45,6 +49,8 @@ avgd := $(foreach av,$(suf_avg),\
 
 
 #targets = _avg
+
+
 
 list_of_targets := $(avgd) 
 
@@ -56,9 +62,6 @@ list_of_targets := $(avgd)
 
 #list_of_targets = $(avgd)$(combd)$(extrad)
 
-#$(info $(list_merge))
-#$(info $(list_avg))
-#$(info $(list_of_targets))
 
 
 # definition of weights for cleaning
@@ -75,14 +78,17 @@ weights := rob0 natural uniform
 #extra_weights-K-J041757_avg = taper01 taper02 taper03
 
 
+
 show_plot := uvwave uv  wt
+
 
 
 # definition of tasks for all
 #
 result_rules := merge chanaverage img
 #result_rules = merge chanaverage img tofits plot_data maps
-#
+
+
 ##-- End of project info -----------------------------------------------
 
 ##-- Directory set-up --------------------------------------------------
