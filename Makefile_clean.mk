@@ -356,49 +356,62 @@ endef
 define Combine_Template
 # template to combine data from different configurations
 #
+$(eval comb_dir := $(RES_DIR)/band_$(1)/combined_evlaBC)
+
+.PHONY: combine-$(1)-$(2)
+.PHONY: combine_prep-$(1)-$(2)
+
+$(eval log_comb_prep := $(comb_dir)/log_comb_prep-$(1)-$(2))
+
 combine-$(1)-$(2): combine_prep-$(1)-$(2)
 
-combine_prep-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
+combine_prep-$(1)-$(2): $(log_comb_prep)
 
-$(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
+$(log_comb_prep): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
 	@$(SH_DIR)/mk_combine.sh \
 	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'prep_data' \
-	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
-	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
+	    -w $(comb_dir) \
+	    -l $(log_comb_prep)
 
 
 
-combine_viewdata-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2)
+$(eval log_comb_viewdata := $(comb_dir)/log_comb_viewdata-$(1)-$(2))
 
-$(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
+combine_viewdata-$(1)-$(2): $(log_comb_viewdata)
+
+$(log_comb_viewdata): $(log_comb_prep)
 	@$(SH_DIR)/mk_combine.sh \
 	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'viewdata' \
-	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
-	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_viewdata-$(1)-$(2)
+	    -w $(comb_dir) \
+	    -l $(log_comb_viewdata)
 
 
 
-combine_calc_wt-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
+$(eval log_comb_calc_wt := $(comb_dir)/log_comb_calc_wt-$(1)-$(2))
 
-$(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_prep-$(1)-$(2)
+combine_calc_wt-$(1)-$(2): $(log_comb_calc_wt)
+
+$(log_comb_calc_wt): $(log_comb_prep)
 	@$(SH_DIR)/mk_combine.sh \
 	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'calc_wt' \
-	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
-	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
+	    -w $(comb_dir) \
+	    -l $(log_comb_calc_wt)
 
 
 
-combine_concat-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2)
+$(eval log_comb_concat := $(comb_dir)/log_comb_concat-$(1)-$(2))
 
-$(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2): $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_calc_wt-$(1)-$(2)
+combine_concat-$(1)-$(2): $(log_comb_concat)
+
+$(log_comb_concat): $(log_comb_calc_wt)
 	@$(SH_DIR)/mk_combine.sh \
 	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'concat' \
-	    -w $(RES_DIR)/band_$(1)/combined_evlaBC \
-	    -l $(RES_DIR)/band_$(1)/combined_evlaBC/log_comb_concat-$(1)-$(2)
+	    -w $(comb_dir) \
+	    -l $(log_comb_concat)
 
 endef
 
@@ -521,27 +534,28 @@ $(foreach avsrc, $(list_avg),\
 
 
 
-# for targets
+# For targets
 #
 $(foreach tgt, $(list_of_targets), \
     $(eval $(call Template_OnlyTarget,$(tgt))) \
     $(foreach band, $(BANDS), \
         $(eval plot_list-$(band)_$(tgt) = ) \
 	$(foreach plot, $(show_plot),\
-            $(eval $(call PlotData,$(band),$(tgt),$(plot)))\
-            $(eval plot_list-$(band)_$(tgt) += plot_data-$(band)-$(tgt)-$(plot))\
+            $(eval $(call PlotData,$(band),$(tgt),$(plot))) \
+            $(eval plot_list-$(band)_$(tgt) += \
+                plot_data-$(band)-$(tgt)-$(plot)) \
         ) \
-        $(eval $(call Target_Template,$(band),$(tgt)))\
-        $(foreach wt, $(weights),\
-            $(eval $(call Clean_Template,$(band),$(tgt),$(wt)))\
-        )\
-        $(foreach wt, $(extra_weights-$(tgt)),\
-            $(eval $(call Clean_Template,$(band),$(tgt),$(wt)))\
-        )\
-        $(foreach wt, $(extra_weights-$(band)-$(tgt)),\
-            $(eval $(call Clean_Template,$(band),$(tgt),$(wt)))\
-        )\
-     )\
+        $(eval $(call Target_Template,$(band),$(tgt))) \
+        $(foreach wt, $(weights), \
+            $(eval $(call Clean_Template,$(band),$(tgt),$(wt))) \
+        ) \
+        $(foreach wt, $(extra_weights-$(tgt)), \
+            $(eval $(call Clean_Template,$(band),$(tgt),$(wt))) \
+        ) \
+        $(foreach wt, $(extra_weights-$(band)-$(tgt)), \
+            $(eval $(call Clean_Template,$(band),$(tgt),$(wt))) \
+        ) \
+     ) \
 )
 
 
