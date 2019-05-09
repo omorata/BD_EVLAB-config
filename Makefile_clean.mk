@@ -122,10 +122,11 @@ define Merge_Template
 # templates to prepare the data before the cleaning
 #  the first parameter is the band name, the second the source name
 #
+$(eval log_merge := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
+
+
 .PHONY: merge-$(1) merge-$(2)
 .PHONY: merge-$(1)-$(2)
-
-$(eval log_merge := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
 
 merge-$(1): merge-$(1)-$(2)
 
@@ -148,11 +149,12 @@ define ChanAvg_Template
 #
 $(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
 
-.PHONY: chanaverage-$(1) chanaverage-$(2)
-.PHONY: chanaverage-$(1)-$(2)
-
 $(eval log_merge := $(mrg_dir)/log_merge-$(1)-$(2))
 $(eval log_chanavg := $(mrg_dir)/log_chanaverage-$(1)-$(2))
+
+
+.PHONY: chanaverage-$(1) chanaverage-$(2)
+.PHONY: chanaverage-$(1)-$(2)
 
 chanaverage-$(1): chanaverage-$(1)-$(2)
 chanaverage-$(2): chanaverage-$(1)-$(2)
@@ -253,10 +255,10 @@ $(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
 $(eval map_dir := $(RES_DIR)/band_$(1)/maps)
 
 
+$(eval log_dirty := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_dirty)
+
 .PHONY: dirty-$(1)-$(2)
 .PHONY: dirty-$(1)-$(2)-$(3)
-
-$(eval log_dirty := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_dirty)
 
 dirty-$(1)-$(2): dirty-$(1)-$(2)-$(3)
 
@@ -275,10 +277,10 @@ $(log_dirty): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 
 
 
+$(eval log_img := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_img)
+
 .PHONY: img-$(1)-$(2)
 .PHONY: img-$(1)-$(2)-$(3)
-
-$(eval log_img := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_img)
 
 img-$(1)-$(2):  img-$(1)-$(2)-$(3)
 
@@ -297,13 +299,13 @@ $(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 
 
 
+$(eval out_fits := $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits)
+
 .PHONY: tofits-$(1)-$(2)-$(3)
 
-$(eval OUT_FITS := $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits)
+tofits-$(1)-$(2)-$(3): $(out_fits)
 
-tofits-$(1)-$(2)-$(3): $(OUT_FITS)
-
-$(OUT_FITS):  $(log_img)
+$(out_fits):  $(log_img)
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
 	    -o $(map_dir) \
@@ -480,24 +482,6 @@ endef
 #-- End of definition of templates ------------------------------------
 
 
-# Define list of targets
-#
-#list_of_targets = $(list_tgtm)
-#list_of_targets = 
-#$(foreach src,$(SOURCES),\
-#    $(foreach tg,$(targets),\
-#        $(eval tgt = $(subst _@,,$(tg)))\
-#        $(eval list_of_targets += $(src)$(tgt))\
-#    )\
-#    $(foreach xx,$(extra_targets-$(src)),\
-#        $(eval addxx = $(subst _@,,$(xx)))\
-#        $(eval list_of_targets += $(src)$(addxx))\
-#    )\
-#)
-#
-##
-
-
 ##-- Rules -------------------------------------------------------------
 
 
@@ -524,14 +508,6 @@ $(foreach avsrc, $(list_avg), \
         $(eval $(call ChanAvg_Template,$(avband),$(avsrc))) \
     ) \
 )
-
-#$(foreach src, $(SOURCES),\
-#    $(eval $(call Template_Sources,$(src)))\
-#    $(foreach band, $(BANDS),\
-#        $(eval $(call PrepData_Template,$(band),$(src)))\
-#        $(eval $(call Combine_Template,$(band),$(src)))\
-#    )\
-#)
 
 
 
