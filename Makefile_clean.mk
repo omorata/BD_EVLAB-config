@@ -301,7 +301,10 @@ $(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 
 $(eval out_fits := $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits)
 
+.PHONY: tofits-$(1)-$(2)
 .PHONY: tofits-$(1)-$(2)-$(3)
+
+tofits-$(1)-$(2): tofits-$(1)-$(2)-$(3)
 
 tofits-$(1)-$(2)-$(3): $(out_fits)
 
@@ -346,6 +349,12 @@ dirty-$(2): dirty-$(1)-$(2)
 
 img-$(1): img-$(1)-$(2)
 img-$(2): img-$(1)-$(2)
+
+
+.PHONY: tofits-$(1) tofits-$(2)
+
+tofits-$(1): tofits-$(1)-$(2)
+tofits-$(2): tofits-$(1)-$(2)
 
 
 .PHONY: plot_data-$(1)-$(2)
@@ -433,6 +442,11 @@ dirty: dirty-$(1)  ## make dirty map of dirty-$$(1)
 .PHONY: img
 
 img: img-$(1)
+
+
+.PHONY: tofits
+
+tofits: tofits-$(1)
 
 endef
 
