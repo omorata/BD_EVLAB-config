@@ -24,27 +24,27 @@ SOURCES := J041757
 #
 # suffixes
 #
-suf_merge := 
-suf_avg := _avg 
-#suf_comb = _evlaBC
+sfx_merge := 
+sfx_avg := _avg 
+#sfx_comb = _evlaBC
 
 
 # sources where to merge SBs
 #
 list_merge := $(SOURCES)
-merged := $(foreach f,$(list_merge), $(addsuffix $(suf_merge),$(f)))
+merged := $(foreach f,$(list_merge), $(addsuffix $(sfx_merge),$(f)))
 
 
 # source where to combine data from configurations
 #
 #list_comb = 
-#combd = $(foreach f,$(list_comb), $(addsuffix $(suf_comb),$(f)))
+#combd = $(foreach f,$(list_comb), $(addsuffix $(sfx_comb),$(f)))
 
 
 # sources where to average channels
 #
 list_avg := $(merged)
-avgd := $(foreach av,$(suf_avg),\
+avgd := $(foreach av,$(sfx_avg),\
              $(foreach f,$(list$(av)),$(addsuffix $(av),$(f))))
 
 
@@ -125,19 +125,19 @@ define Merge_Template
 .PHONY: merge-$(1) merge-$(2)
 .PHONY: merge-$(1)-$(2)
 
-$(eval LOG_MERGE := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
+$(eval log_merge := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
 
 merge-$(1): merge-$(1)-$(2)
 
 merge-$(2): merge-$(1)-$(2)
 
-merge-$(1)-$(2): $(LOG_MERGE)
+merge-$(1)-$(2): $(log_merge)
 
-$(LOG_MERGE):
+$(log_merge):
 	$(SH_DIR)/mk_merge.sh \
 	    -c $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg \
 	    -w $(RES_DIR)/band_$(1) \
-            -l $(LOG_MERGE)
+            -l $(log_merge)
 endef
 
 
@@ -146,23 +146,24 @@ define ChanAvg_Template
 # templates to prepare the data before the cleaning
 #  the first parameter is the band name, the second the source name
 #
+$(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
 
 .PHONY: chanaverage-$(1) chanaverage-$(2)
 .PHONY: chanaverage-$(1)-$(2)
 
-$(eval LOG_MERGE := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
-$(eval LOG_CHANAVG := $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2))
+$(eval log_merge := $(mrg_dir)/log_merge-$(1)-$(2))
+$(eval log_chanavg := $(mrg_dir)/log_chanaverage-$(1)-$(2))
 
 chanaverage-$(1): chanaverage-$(1)-$(2)
 chanaverage-$(2): chanaverage-$(1)-$(2)
 
-chanaverage-$(1)-$(2): $(LOG_CHANAVG)
+chanaverage-$(1)-$(2): $(log_chanavg)
 
-$(LOG_CHANAVG): $(LOG_MERGE)
+$(log_chanavg): $(log_merge)
 	$(SH_DIR)/mk_avg.sh  \
 	    -c $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg \
-	    -w $(RES_DIR)/band_$(1)/merged  \
-	    -l $(LOG_CHANAVG)
+	    -w $(mrg_dir)  \
+	    -l $(log_chanavg)
 
 endef
 
