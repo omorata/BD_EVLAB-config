@@ -25,7 +25,7 @@ SOURCES = J041757 J041836 J041847 J041938
 #
 sfx_merge := 
 sfx_avg := _avg 
-#sfx_comb = _evlaBC
+sfx_comb = _comb
 
 
 # sources where to merge SBs
@@ -36,8 +36,8 @@ merged := $(foreach f,$(list_merge), $(addsuffix $(sfx_merge),$(f)))
 
 # source where to combine data from configurations
 #
-#list_comb = 
-#combd = $(foreach f,$(list_comb), $(addsuffix $(sfx_comb),$(f)))
+list_comb := $(SOURCES) 
+combd  = $(foreach f,$(list_comb), $(addsuffix $(sfx_comb),$(f)))
 
 
 # sources where to average channels
@@ -51,7 +51,7 @@ avgd := $(foreach av,$(sfx_avg),\
 
 
 
-list_of_targets := $(avgd) 
+list_of_targets := $(avgd) $(combd)
 
 # definition of extra_targets for a source
 #
@@ -70,11 +70,11 @@ weights := rob0 natural uniform
 #
 # definition of extra weights for a target
 #
-#extra-weights-J041757_avg = taper00
+#extra-weights-J041757_avg = taper_01 taper_02 taper_03
 #
 # definition of extra weights for a target and band
 #
-#extra_weights-K-J041757_avg = taper01 taper02 taper03
+extra_weights-K-J041757_avg := taper_01 taper_02 taper_03
 
 
 
@@ -367,23 +367,48 @@ endef
 define Combine_Template
 # template to combine data from different configurations
 #
-$(eval comb_dir := $(RES_DIR)/band_$(1)/combined_evlaBC)
+# the first parameter is the band, the second the source name
+#
+$(eval comb_dir := $(RES_DIR)/band_$(1)/combined_BC)
+
+.PHONY: combine-$(1)
+.PHONY: combine-$(2)
+
+combine-$(1): combine-$(1)-$(2)
+combine-$(2): combine-$(1)-$(2)
 
 .PHONY: combine-$(1)-$(2)
 .PHONY: combine_prep-$(1)-$(2)
 
-$(eval log_comb_prep := $(comb_dir)/log_comb_prep-$(1)-$(2))
+combine-$(1)-$(2): combine_concat-$(1)-$(2)
 
-combine-$(1)-$(2): combine_prep-$(1)-$(2)
+$(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
+
+$(eval log_chanavg_comb := $(mrg_dir)/log_chanaverage_comb-$(1)-$(2))
+
+$(eval log_comb_prep := $(comb_dir)/log_comb_prep-$(1)-$(2))
 
 combine_prep-$(1)-$(2): $(log_comb_prep)
 
-$(log_comb_prep): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
+$(log_comb_prep): $(log_chanavg_comb)
 	@$(SH_DIR)/mk_combine.sh \
 	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
 	    -s 'prep_data' \
 	    -w $(comb_dir) \
 	    -l $(log_comb_prep)
+
+
+.PHONY: chanaverage_comb-$(1)-$(2)
+
+
+chanaverage_comb-$(1)-$(2): $(log_chanavg_comb)
+
+$(log_chanavg_comb): $(mrg_dir)/log_merge-$(1)-$(2)
+	$(SH_DIR)/mk_avg.sh  \
+	    -c $(CFG_DIR)/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
+	    -w $(mrg_dir) \
+	    -l $(log_chanavg_comb)
+
 
 
 
@@ -476,6 +501,18 @@ chanaverage: chanaverage-$(1)
 endef
 
 
+define Combine_Sources
+# Template to create combine list for sources
+#
+#  parameter - source
+#
+.PHONY: combine
+
+combine: combine-$(1)
+
+endef
+
+
 
 #define Template_Sources
 # Template to create combination of weights only for sources
@@ -522,7 +559,14 @@ $(foreach avsrc, $(list_avg), \
     ) \
 )
 
-
+# combined B and C array observations
+#
+$(foreach combsrc, $(list_comb), \
+    $(eval $(call Combine_Sources,$(combsrc))) \
+    $(foreach combband, $(BANDS), \
+        $(eval $(call Combine_Template,$(combband),$(combsrc))) \
+    ) \
+)
 
 # For targets
 #
