@@ -37,14 +37,15 @@ merged := $(foreach f,$(list_merge), $(addsuffix $(sfx_merge),$(f)))
 # source where to combine data from configurations
 #
 list_comb := $(SOURCES) 
-combd  = $(foreach f,$(list_comb), $(addsuffix $(sfx_comb),$(f)))
+combd  = $(foreach f,$(list_comb), \
+            $(foreach suf,$(sfx_comb),$(addsuffix $(suf),$(f))))
 
 
 # sources where to average channels
 #
 list_avg := $(merged)
-avgd := $(foreach av,$(sfx_avg),\
-             $(foreach f,$(list$(av)),$(addsuffix $(av),$(f))))
+avgd := $(foreach f,$(list_merge),\
+             $(foreach suf,$(sfx_avg),$(addsuffix $(suf),$(f))))
 
 
 #targets = _avg
@@ -65,8 +66,8 @@ list_of_targets := $(avgd) $(combd)
 
 # definition of weights for cleaning
 #
-weights := rob0 natural uniform
-#weights = rob0 natural uniform com_uv_rob0 com_uv_natural com_uv_uniform
+#weights := rob0 natural uniform
+weights = rob0 natural uniform com_uv-rob0 com_uv-natural com_uv-uniform
 #
 # definition of extra weights for a target
 #
@@ -249,11 +250,14 @@ define Clean_Template
 #   img: to clean the map
 #   tofits: to export the cleaned map to fits
 #   view: to view the result of the clean
+#   maps: to make nicer maps of the resulting image
 #
 $(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
 $(eval map_dir := $(RES_DIR)/band_$(1)/maps)
 
 
+# make dirty map
+#
 $(eval log_dirty := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_dirty)
 
 .PHONY: dirty-$(1)-$(2)
@@ -276,6 +280,8 @@ $(log_dirty): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 
 
 
+# clean map => make image
+#
 $(eval log_img := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_img)
 
 .PHONY: img-$(1)-$(2)
@@ -297,7 +303,8 @@ $(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 	    -l $(log_img)
 
 
-
+# export to fits
+#
 $(eval out_fits := $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits)
 
 .PHONY: tofits-$(1)-$(2)
@@ -317,7 +324,8 @@ $(out_fits):  $(log_img)
 	    -l $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
 
 
-
+# view
+#
 view-$(1)-$(2)-$(3): $(log_img)
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
@@ -328,6 +336,29 @@ view-$(1)-$(2)-$(3): $(log_img)
 	    -a 'view' \
 	    -w $(map_dir)/$(2) \
 	    -l $(map_dir)/$(2)/log_view-$(1)-$(2)-$(3)
+
+
+# output maps
+#
+$(eval out_map := $(map_dir)/$(2)/$(SNAME)-$(1)-$(2)-$(3).pdf)
+
+.PHONY: maps-$(1) maps-$(2)
+.PHONY: maps-$(1)-$(2)
+.PHONY: maps-$(1)-$(2)-$(3)
+
+maps-$(1): maps-$(1)-$(2)
+maps-$(2): maps-$(1)-$(2)
+
+maps-$(1)-$(2): maps-$(1)-$(2)-$(3)
+
+maps-$(1)-$(2)-$(3): $(out_map)
+
+$(out_map): $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml
+	@$(PYTHON_DIR)/dbxmap.py \
+		-c $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml  \
+		-w $(map_dir)/$(2)  \
+		-o $(map_dir)/$(2)  \
+		-l $(map_dir)/$(2)/log_map-$(1)-$(2)-$(3)
 
 endef
 
@@ -369,7 +400,7 @@ define Combine_Template
 #
 # the first parameter is the band, the second the source name
 #
-$(eval comb_dir := $(RES_DIR)/band_$(1)/combined_BC)
+$(eval comb_dir := $(RES_DIR)/band_$(1)/combined_BC/$(2))
 
 .PHONY: combine-$(1)
 .PHONY: combine-$(2)
@@ -453,6 +484,35 @@ endef
 
 
 
+#define MapsTemplate
+## Template to make maps of the fits files
+##
+## first parameter - band, second parameter - target, third parameter -
+## weight
+#
+#$(eval map_dir := $(RES_DIR)/band_$(1)/maps)
+#$(eval out_map := $(map_dir)/$(SNAME)-$(1)-$(2)-$(3).pdf)
+#
+#.PHONY: maps-$(1) maps-$(2)
+#.PHONY: maps-$(1)-$(2)
+#.PHONY: maps-$(1)-$(2)-$(3)
+#
+#maps-$(1): maps-$(1)-$(2)
+#maps-$(2): maps-$(1)-$(2)
+#
+#maps-$(1)-$(2): maps-$(1)-$(2)-$(3)
+#
+#maps-$(1)-$(2)-$(3): $(out_map)
+#
+#$(out_map): $(map_dir)/band_$(1)/img-$(1)-$(2)-$(3).fits
+#	@$(PYTHON_DIR)/dbxmap.py \
+#		-c $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml \
+#		-l $(map_dir)/log_map-$(1)-$(2)-$(3)
+#
+#endef
+
+
+
 define Template_OnlyTarget
 # Template to create combination of weights only for targets
 #
@@ -472,6 +532,10 @@ img: img-$(1)
 
 tofits: tofits-$(1)
 
+
+.PHONY: maps
+
+maps: maps-$(1)
 endef
 
 
