@@ -1,0 +1,45 @@
+page:
+  outfile: 'protoBDsTau-C-J041757_avg-natural.png'
+  dpi: 300
+  size: [9,9]
+
+
+panels:
+  yx: [1,1]
+  markers:
+    file-a: 'markers-J041757.txt'
+      
+  panel_01:
+    view:
+      type: 'radius'
+      radius: 0.00111
+      
+    #markers:
+    #  file: 'markers-proto.txt'
+      
+    labels:
+      lab1:
+        text: "J041757\n C rob = 2"
+        relative: True
+        position: [0.15, 0.90]
+        color: 'yellow'
+        size: 24
+
+    dataset_01:
+      filename: 'img-C-J041757_avg-natural.fits'
+      dims: [0,1]
+      type: 'pixel'
+      pixrange:
+        base: 3.85e-6
+        range: [-3.,45.]
+        colormap: 'gist_heat'
+        
+    dataset_02:
+      filename: 'img-C-J041757_avg-natural.fits'
+      dims: [0,1]
+      type: 'cntr'
+      contours:
+        base: 3.85e-6
+        levels: [-3,-2,3,8,13,18,23,28,33,38,43]
+        colors: 'lightgreen'
+
