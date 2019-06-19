@@ -171,58 +171,6 @@ endef
 
 
 
-#define PrepData_Template
-# templates to prepare the data before the cleaning
-#  the first parameter is the band name, the second the source name
-#
-#.PHONY: merge-$(1) merge-$(2)
-#.PHONY: merge-$(1)-$(2)
-#
-#merge-$(1): merge-$(1)-$(2)
-#
-#merge-$(2): merge-$(1)-$(2)
-#
-#
-#merge-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
-#
-#$(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2):
-#	$(SH_DIR)/mk_merge.sh \
-#	    -c $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg \
-#	    -w $(RES_DIR)/band_$(1) \
-#            -l $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
-#
-#
-#
-#.PHONY: chanaverage-$(1) chanaverage-$(2)
-#.PHONY: chanaverage-$(1)-$(2)
-#
-#chanaverage-$(1): chanaverage-$(1)-$(2)
-#chanaverage-$(2): chanaverage-$(1)-$(2)
-#
-#chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
-#
-#$(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
-#	$(SH_DIR)/mk_avg.sh  \
-#	    -c $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg \
-#	    -w $(RES_DIR)/band_$(1)/merged  \
-#	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage-$(1)-$(2)
-
-
-
-#.PHONY: chanaverage_comb-$(1)-$(2)
-#
-#chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
-#
-#$(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2): $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2)
-#	$(SH_DIR)/mk_avg.sh  \
-#	    -c $(CFG_DIR)/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
-#	    -w $(RES_DIR)/band_$(1)/merged \
-#	    -l $(RES_DIR)/band_$(1)/merged/log_chanaverage_comb-$(1)-$(2)
-#
-#endef
-
-
-
 define PlotData
 
 .PHONY: plot_data-$(1)-$(2)-$(3)
@@ -576,21 +524,6 @@ combine: combine-$(1)
 
 endef
 
-
-
-#define Template_Sources
-# Template to create combination of weights only for sources
-#
-#  parameter - source
-#
-#.PHONY: merge
-#.PHONY: chanaverage
-#
-#merge: merge-$(1)
-#
-#chanaverage: chanaverage-$(1)
-#
-#endef
 
 #
 #-- End of definition of templates ------------------------------------
