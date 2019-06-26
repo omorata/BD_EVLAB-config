@@ -13,7 +13,7 @@
 PRJ_NAME := BD-EVLA_B
 SNAME := protoBDsTau
 BANDS := C X K
-SOURCES = J041757 J041836 J041847 J041938
+SOURCES := J041757 J041836 J041847 J041938
 
 
 
@@ -107,7 +107,7 @@ HOME_DIR := $(ROOT_DIR)/$(PRJ_NAME)
 # names of directories to use
 #
 BIN_DIR := $(HOME_DIR)/scripts
-CFG_DIR := $(HOME_DIR)/config/clean
+CFG_DIR := $(HOME_DIR)/config/imaging
 DATA_DIR := $(HOME_DIR)/data
 REDC_DIR := $(HOME_DIR)/reduction
 RES_DIR := $(HOME_DIR)/results
