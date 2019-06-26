@@ -47,7 +47,7 @@ endif
 #
 ifneq ($(sfx_avg),)
    list_avg := $(merged)
-   avgd := $(foreach f,$(list_merge),\
+   avgd := $(foreach f,$(list_avg),\
                $(foreach suf,$(sfx_avg),$(addsuffix $(suf),$(f))))
 endif
 
@@ -141,9 +141,11 @@ merge-$(2): merge-$(1)-$(2)
 
 merge-$(1)-$(2): $(log_merge)
 
-$(log_merge):
+$(eval cfg_merge := $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg)
+
+$(log_merge): $(cfg_merge)
 	$(SH_DIR)/mk_merge.sh \
-	    -c $(CFG_DIR)/band_$(1)/merge_sbs-$(1)-$(2).cfg \
+	    -c $(cfg_merge) \
 	    -w $(RES_DIR)/band_$(1) \
             -l $(log_merge)
 endef
@@ -168,9 +170,11 @@ chanaverage-$(2): chanaverage-$(1)-$(2)
 
 chanaverage-$(1)-$(2): $(log_chanavg)
 
-$(log_chanavg): $(log_merge)
+$(eval cfg_chanavg := $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg)
+
+$(log_chanavg): $(log_merge) $(cfg_chanavg)
 	$(SH_DIR)/mk_avg.sh  \
-	    -c $(CFG_DIR)/band_$(1)/chanaverage-$(1)-$(2).cfg \
+	    -c $(cfg_chanavg) \
 	    -w $(mrg_dir)  \
 	    -l $(log_chanavg)
 
@@ -222,9 +226,11 @@ dirty-$(1)-$(2): dirty-$(1)-$(2)-$(3)
 
 dirty-$(1)-$(2)-$(3): $(log_dirty)
 
-$(log_dirty): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
+$(eval cfg_dirty :=  $(CFG_DIR)/band_$(1)/$(1)-$(2).ini )
+
+$(log_dirty): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms $(cfg_dirty)
 	$(SH_DIR)/mk_clean.sh \
-            -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
+            -c $(cfg_dirty) \
 	    -i $(mrg_dir) \
 	    -o $(map_dir)  \
 	    -t $(3) \
@@ -246,9 +252,11 @@ img-$(1)-$(2):  img-$(1)-$(2)-$(3)
 
 img-$(1)-$(2)-$(3): $(log_img)
 
-$(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
+$(eval cfg_img := $(CFG_DIR)/band_$(1)/$(1)-$(2).ini )
+
+$(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms $(cfg_img)
 	$(SH_DIR)/mk_clean.sh  \
-	    -c $(CFG_DIR)/band_$(1)/$(1)-$(2).ini \
+	    -c $(cfg_img) \
 	    -i $(mrg_dir) \
 	    -o $(map_dir)  \
 	    -t $(3) \
@@ -308,9 +316,11 @@ maps-$(1)-$(2): maps-$(1)-$(2)-$(3)
 
 maps-$(1)-$(2)-$(3): $(out_map)
 
-$(out_map): $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml
+$(eval cfg_map := $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml)
+
+$(out_map): $(map_dir)/$(2)/img-$(1)-$(2)-$(3).fits $(cfg_map)
 	@$(PYTHON_DIR)/dbxmap.py \
-		-c $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml  \
+		-c $(cfg_map)  \
 		-w $(map_dir)/$(2)  \
 		-o $(map_dir)/$(2)  \
 		-l $(map_dir)/$(2)/log_map-$(1)-$(2)-$(3)
@@ -376,9 +386,11 @@ $(eval log_comb_prep := $(comb_dir)/log_comb_prep-$(1)-$(2))
 
 combine_prep-$(1)-$(2): $(log_comb_prep)
 
+$(eval cfg_comb := $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg)
+
 $(log_comb_prep): $(log_chanavg_comb)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(cfg_comb) \
 	    -s 'prep_data' \
 	    -w $(comb_dir) \
 	    -l $(log_comb_prep)
@@ -404,7 +416,7 @@ combine_viewdata-$(1)-$(2): $(log_comb_viewdata)
 
 $(log_comb_viewdata): $(log_comb_prep)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(cfg_comb) \
 	    -s 'viewdata' \
 	    -w $(comb_dir) \
 	    -l $(log_comb_viewdata)
@@ -417,7 +429,7 @@ combine_calc_wt-$(1)-$(2): $(log_comb_calc_wt)
 
 $(log_comb_calc_wt): $(log_comb_prep)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(cfg_comb) \
 	    -s 'calc_wt' \
 	    -w $(comb_dir) \
 	    -l $(log_comb_calc_wt)
@@ -430,7 +442,7 @@ combine_concat-$(1)-$(2): $(log_comb_concat)
 
 $(log_comb_concat): $(log_comb_calc_wt)
 	@$(SH_DIR)/mk_combine.sh \
-	    -c $(CFG_DIR)/band_$(1)/comb_evlaBC-$(1)-$(2).cfg \
+	    -c $(cfg_comb) \
 	    -s 'concat' \
 	    -w $(comb_dir) \
 	    -l $(log_comb_concat)
