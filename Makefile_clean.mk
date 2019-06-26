@@ -25,7 +25,7 @@ SOURCES = J041757 J041836 J041847 J041938
 #
 sfx_merge := 
 sfx_avg := _avg 
-sfx_comb = _comb
+sfx_comb := _comb
 
 
 # sources where to merge SBs
@@ -36,56 +36,63 @@ merged := $(foreach f,$(list_merge), $(addsuffix $(sfx_merge),$(f)))
 
 # source where to combine data from configurations
 #
-list_comb := $(SOURCES) 
-combd  = $(foreach f,$(list_comb), \
-            $(foreach suf,$(sfx_comb),$(addsuffix $(suf),$(f))))
+ifneq ($(sfx_comb),)
+   list_comb := $(SOURCES) 
+   combd  = $(foreach f,$(list_comb), \
+               $(foreach suf,$(sfx_comb),$(addsuffix $(suf),$(f))))
+endif
 
 
 # sources where to average channels
 #
-list_avg := $(merged)
-avgd := $(foreach f,$(list_merge),\
-             $(foreach suf,$(sfx_avg),$(addsuffix $(suf),$(f))))
+ifneq ($(sfx_avg),)
+   list_avg := $(merged)
+   avgd := $(foreach f,$(list_merge),\
+               $(foreach suf,$(sfx_avg),$(addsuffix $(suf),$(f))))
+endif
 
 
-#targets = _avg
-
-
-
-list_of_targets := $(avgd) $(combd)
 
 # definition of extra_targets for a source
 #
 #extra_target-J041836 = _xcd
+
 #extrad = $(foreach src,$(SOURCES),$(foreach xx,$(extra_target-$(src)),\
 #               $(addsuffix $(xx),$(src))))
-
-#list_of_targets = $(avgd)$(combd)$(extrad)
 
 
 
 # definition of weights for cleaning
 #
-#weights := rob0 natural uniform
-weights = rob0 natural uniform com_uv-rob0 com_uv-natural com_uv-uniform
+weights := rob0 natural uniform
+#weights = rob0 natural uniform com_uv-rob0 com_uv-natural com_uv-uniform
+
 #
 # definition of extra weights for a target
 #
-#extra-weights-J041757_avg = taper_01 taper_02 taper_03
+extra_weights-J041757_avg := com_uv-rob0 com_uv-natural com_uv-uniform
+extra_weights-J041757_comb := com_uv-rob0 com_uv-natural com_uv-uniform
+
 #
 # definition of extra weights for a target and band
 #
 extra_weights-K-J041757_avg := taper_01 taper_02 taper_03
 
 
-
 show_plot := uvwave uv  wt
 
+#
+# list of targets
+#
+#
+list_of_targets := $(avgd) $(combd)
+#list_of_targets := $(merged)
+#list_of_targets := $(avgd) $(combd) $(extrad)
 
 
 # definition of tasks for all
 #
-result_rules := merge chanaverage img
+result_rules := merge chanaverage img maps
 #result_rules = merge chanaverage img tofits plot_data maps
 
 
