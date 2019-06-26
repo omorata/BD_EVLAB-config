@@ -213,7 +213,7 @@ $(eval map_dir := $(RES_DIR)/band_$(1)/maps)
 
 # make dirty map
 #
-$(eval log_dirty := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_dirty)
+$(eval log_dirty := $(map_dir)/$(2)/log_dirty-$(1)-$(2)-$(3))
 
 .PHONY: dirty-$(1)-$(2)
 .PHONY: dirty-$(1)-$(2)-$(3)
@@ -237,7 +237,7 @@ $(log_dirty): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms
 
 # clean map => make image
 #
-$(eval log_img := $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_img)
+$(eval log_img := $(map_dir)/$(2)/log_img-$(1)-$(2)-$(3))
 
 .PHONY: img-$(1)-$(2)
 .PHONY: img-$(1)-$(2)-$(3)
@@ -276,7 +276,7 @@ $(out_fits):  $(log_img)
             -t $(3) \
 	    -a 'tofits' \
 	    -w $(mrg_dir) \
-	    -l $(map_dir)/$(2)/log_clean-$(1)-$(2)-$(3)_tofits
+	    -l $(map_dir)/$(2)/log_tofits-$(1)-$(2)-$(3)
 
 
 # view
