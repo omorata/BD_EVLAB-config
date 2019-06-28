@@ -72,6 +72,8 @@ weights := rob0 natural uniform
 #
 extra_weights-J041757_avg := com_uv-rob0 com_uv-natural com_uv-uniform
 extra_weights-J041757_comb := com_uv-rob0 com_uv-natural com_uv-uniform
+extra_weights-J041836_comb := com_uv-rob0 com_uv-natural com_uv-uniform
+extra_weights-J041847_comb := com_uv-rob0 com_uv-natural com_uv-uniform
 
 #
 # definition of extra weights for a target and band
