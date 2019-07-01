@@ -64,26 +64,25 @@ endif
 
 # definition of weights for cleaning
 #
-weights := rob0 natural uniform
-#weights = rob0 natural uniform com_uv-rob0 com_uv-natural com_uv-uniform
-
+weights = rob0 natural uniform com_uv-rob0 com_uv-natural com_uv-uniform
 #
+
 # definition of extra weights for a target
 #
-extra_weights-J041757_avg := com_uv-rob0 com_uv-natural com_uv-uniform
-extra_weights-J041757_comb := com_uv-rob0 com_uv-natural com_uv-uniform
-extra_weights-J041836_comb := com_uv-rob0 com_uv-natural com_uv-uniform
-extra_weights-J041847_comb := com_uv-rob0 com_uv-natural com_uv-uniform
-
+#extra_weights-J041757_avg := com_uv-rob0 com_uv-natural com_uv-uniform
 #
+
 # definition of extra weights for a target and band
 #
 extra_weights-K-J041757_avg := taper_01 taper_02 taper_03
+#
 
 
+# plots for combination
+#
 show_plot := uvwave uv  wt
 
-#
+
 # list of targets
 #
 #
