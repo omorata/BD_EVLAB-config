@@ -255,7 +255,8 @@ img-$(1)-$(2)-$(3): $(log_img)
 
 $(eval cfg_img := $(CFG_DIR)/band_$(1)/$(1)-$(2).ini )
 
-$(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms $(cfg_img)
+#$(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms $(cfg_img)
+$(log_img): $(mrg_dir)/$(SNAME)-$(1)-$(2).ms 
 	$(SH_DIR)/mk_clean.sh  \
 	    -c $(cfg_img) \
 	    -i $(mrg_dir) \
