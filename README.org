@@ -1,0 +1,30 @@
+#+STARTUP: indent hidestars
+#+TITLE: BD EVLA-B configuration files 
+#+AUTHOR: Oscar Morata
+#+OPTIONS: toc:nil
+
+
+* BD EVLA-B configuration files 
+
+Configuration files used to calibrate and process the EVLA continuum data
+observed in a sample of proto-brown dwarf candidates in Taurus.
+
+/Project:/
+
+
+#+TOC: headlines 2
+
+** Getting Started
+
+*** Prerequisites
++ Makefile
++ myEVLA_Pipeline
++ dbxmap.py 
+
+*** Installing and configuring
+
+** Directory structure
+
+** Running the Makefile
+
+*** options
