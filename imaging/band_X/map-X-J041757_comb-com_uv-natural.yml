@@ -30,8 +30,8 @@ panels:
       dims: [0,1]
       type: 'pixel'
       pixrange:
-        base: 4.30e-6
-        range: [-3.,23.]
+        base: 3.4e-6
+        range: [-3.,26.]
         colormap: 'gist_heat'
         
     dataset_02:
@@ -39,7 +39,7 @@ panels:
       dims: [0,1]
       type: 'cntr'
       contours:
-        base: 4.30e-6
-        levels: [-3,-2,3,6,9,12,15,18,21]
+        base: 3.4e-6
+        levels: [-3,-2,3,6,9,12,15,18,21,24]
         colors: 'lightgreen'
 

@@ -305,7 +305,7 @@ view-$(1)-$(2)-$(3): $(log_img)
 
 # output maps
 #
-$(eval out_map := $(map_dir)/$(2)/$(SNAME)-$(1)-$(2)-$(3).pdf)
+$(eval out_map := $(map_dir)/$(2)/$(SNAME)-$(1)-$(2)-$(3).png)
 
 .PHONY: maps-$(1) maps-$(2)
 .PHONY: maps-$(1)-$(2)

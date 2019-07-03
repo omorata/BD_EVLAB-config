@@ -1,5 +1,5 @@
 page:
-  outfile: 'protoBDsTau-X-J041757_comb-com_uv-rob0.png'
+  outfile: 'protoBDsTau-X-J041757_comb-natural.png'
   dpi: 300
   size: [9,9]
 
@@ -19,27 +19,27 @@ panels:
       
     labels:
       lab1:
-        text: "J041757 comb-com_uv\nX rob = 0"
+        text: "J041757 comb\nX rob = 2"
         relative: True
         position: [0.32, 0.92]
         color: 'yellow'
         size: 24
 
     dataset_01:
-      filename: 'img-X-J041757_comb-com_uv-rob0.fits'
+      filename: 'img-X-J041757_comb-natural.fits'
       dims: [0,1]
       type: 'pixel'
       pixrange:
-        base: 4.7e-6
-        range: [-3.,18.]
+        base: 3.4e-6
+        range: [-3.,26.]
         colormap: 'gist_heat'
         
     dataset_02:
-      filename: 'img-X-J041757_comb-com_uv-rob0.fits'
+      filename: 'img-X-J041757_comb-natural.fits'
       dims: [0,1]
       type: 'cntr'
       contours:
-        base: 4.7e-6
-        levels: [-3,-2,3,6,9,12,15]
+        base: 3.4e-6
+        levels: [-3,-2,3,6,9,12,15,18,21,24]
         colors: 'lightgreen'
 

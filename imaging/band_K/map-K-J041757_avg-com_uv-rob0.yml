@@ -1,5 +1,5 @@
 page:
-  outfile: 'protoBDsTau-X-J041757_comb-com_uv-rob0.png'
+  outfile: 'protoBDsTau-K-J041757_avg-com_uv-rob0.png'
   dpi: 300
   size: [9,9]
 
@@ -14,32 +14,29 @@ panels:
       type: 'radius'
       radius: 0.00111
       
-    #markers:
-    #  file: 'markers-proto.txt'
-      
     labels:
       lab1:
-        text: "J041757 comb-com_uv\nX rob = 0"
+        text: "J041757 avg-com_uv\nK rob = 0"
         relative: True
         position: [0.32, 0.92]
         color: 'yellow'
         size: 24
 
     dataset_01:
-      filename: 'img-X-J041757_comb-com_uv-rob0.fits'
+      filename: 'img-K-J041757_avg-com_uv-rob0.fits'
       dims: [0,1]
       type: 'pixel'
       pixrange:
-        base: 4.7e-6
-        range: [-3.,18.]
+        base: 1.2e-5
+        range: [-3.,5.]
         colormap: 'gist_heat'
         
     dataset_02:
-      filename: 'img-X-J041757_comb-com_uv-rob0.fits'
+      filename: 'img-K-J041757_avg-com_uv-rob0.fits'
       dims: [0,1]
       type: 'cntr'
       contours:
-        base: 4.7e-6
-        levels: [-3,-2,3,6,9,12,15]
+        base: 1.2e-5
+        levels: [-3,-2,2,3,4,5]
         colors: 'lightgreen'
 
