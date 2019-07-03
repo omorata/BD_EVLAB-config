@@ -10,21 +10,16 @@ observed in a sample of proto-brown dwarf candidates in Taurus.
 
 # Table of Contents
 
-1.  [BD EVLA-B configuration files](#org4db19ee)
-    1.  [Getting Started](#org9be82ee)
-        1.  [Prerequisites](#org971461f)
-        2.  [Installing and configuring](#org8312538)
-    2.  [Directory structure](#org4fc2135)
-    3.  [Running the Makefile](#org7857a28)
-        1.  [options](#org4893791)
+1.  [BD EVLA-B configuration files](#orgba985d2)
+    1.  [Getting Started](#org7f3d0bf)
+    2.  [Directory structure](#orgc737f26)
+    3.  [Running the Makefile](#org480a13a)
 
 
-<a id="org9be82ee"></a>
+<a id="org7f3d0bf"></a>
 
 ## Getting Started
 
-
-<a id="org971461f"></a>
 
 ### Prerequisites
 
@@ -33,22 +28,18 @@ observed in a sample of proto-brown dwarf candidates in Taurus.
 -   dbxmap.py
 
 
-<a id="org8312538"></a>
-
 ### Installing and configuring
 
 
-<a id="org4fc2135"></a>
+<a id="orgc737f26"></a>
 
 ## Directory structure
 
 
-<a id="org7857a28"></a>
+<a id="org480a13a"></a>
 
 ## Running the Makefile
 
-
-<a id="org4893791"></a>
 
 ### options
 

@@ -1,8 +1,8 @@
 #+STARTUP: indent hidestars
 #+TITLE: BD EVLA-B configuration files 
 #+AUTHOR: Oscar Morata
+#+EMAIL: omoratax@gmail.com
 #+OPTIONS: toc:nil
-
 
 * BD EVLA-B configuration files 
 
