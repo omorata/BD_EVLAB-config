@@ -1,5 +1,5 @@
 page:
-  outfile: 'protoBDsTau-X-J041836_avg-natural.png'
+  outfile: 'protoBDsTau-K-J041836_avg-natural.png'
   dpi: 300
   size: [9,9]
 
@@ -14,32 +14,29 @@ panels:
       type: 'radius'
       radius: 0.00111
       
-    #markers:
-    #  file: 'markers-proto.txt'
-      
     labels:
       lab1:
-        text: "J041836\nX rob = 2"
+        text: "J041836\nK rob = 2"
         relative: True
         position: [0.15, 0.90]
         color: 'yellow'
         size: 24
 
     dataset_01:
-      filename: 'img-X-J041836_avg-natural.fits'
+      filename: 'img-K-J041836_avg-natural.fits'
       dims: [0,1]
       type: 'pixel'
       pixrange:
-        base: 5.7e-6
-        range: [-3.,19.]
+        base: 5.4e-6
+        range: [-3.,8.]
         colormap: 'gist_heat'
         
     dataset_02:
-      filename: 'img-X-J041836_avg-natural.fits'
+      filename: 'img-K-J041836_avg-natural.fits'
       dims: [0,1]
       type: 'cntr'
       contours:
-        base: 5.7e-6
-        levels: [-3,-2,3,6,9,12,15,18]
+        base: 5.4e-6
+        levels: [-3,-2,3,4,5,6,7]
         colors: 'lightgreen'
 

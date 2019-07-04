@@ -16,7 +16,7 @@ panels:
       
     labels:
       lab1:
-        text: "J041836\nrob = -1.5"
+        text: "J041836\nX rob = -1.5"
         relative: True
         position: [0.15, 0.90]
         color: 'yellow'
