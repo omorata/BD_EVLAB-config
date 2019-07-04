@@ -19,7 +19,7 @@ panels:
       
     labels:
       lab1:
-        text: "J041757 comb com_uv\n C rob = 0"
+        text: "J041757 comb\n C rob = 0"
         relative: True
         position: [0.25, 0.90]
         color: 'yellow'
