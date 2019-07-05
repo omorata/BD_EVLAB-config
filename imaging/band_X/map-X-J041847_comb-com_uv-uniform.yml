@@ -1,0 +1,45 @@
+page:
+  outfile: 'protoBDsTau-X-J041847_comb-com_uv-uniform.png'
+  dpi: 300
+  size: [9,9]
+
+
+panels:
+  yx: [1,1]
+  markers:
+    file-a: 'markers-J041847.txt'
+      
+  panel_01:
+    view:
+      type: 'radius'
+      radius: 0.00111
+      
+    #markers:
+    #  file: 'markers-proto.txt'
+      
+    labels:
+      lab1:
+        text: "J041847 comb-com_uv\n X rob = -2"
+        relative: True
+        position: [0.32, 0.92]
+        color: 'yellow'
+        size: 24
+
+    dataset_01:
+      filename: 'img-X-J041847_comb-com_uv-uniform.fits'
+      dims: [0,1]
+      type: 'pixel'
+      pixrange:
+        base: 1.1e-5
+        range: [-3.,5.]
+        colormap: 'gist_heat'
+        
+    dataset_02:
+      filename: 'img-X-J041847_comb-com_uv-uniform.fits'
+      dims: [0,1]
+      type: 'cntr'
+      contours:
+        base: 1.1e-5
+        levels: [-3,-2,3,4,5,6]
+        colors: 'lightgreen'
+
