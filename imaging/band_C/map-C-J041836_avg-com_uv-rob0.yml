@@ -1,0 +1,45 @@
+page:
+  outfile: 'protoBDsTau-C-J041836_avg-com_uv-rob0.png'
+  dpi: 300
+  size: [9,9]
+
+
+panels:
+  yx: [1,1]
+  markers:
+    file-a: 'markers-J041836.txt'
+      
+  panel_01:
+    view:
+      type: 'radius'
+      radius: 0.00111
+      
+    #markers:
+    #  file: 'markers-proto.txt'
+      
+    labels:
+      lab1:
+        text: "J041836 avg com_uv\n C rob = 0"
+        relative: True
+        position: [0.25, 0.90]
+        color: 'yellow'
+        size: 20
+
+    dataset_01:
+      filename: 'img-C-J041836_avg-com_uv-rob0.fits'
+      dims: [0,1]
+      type: 'pixel'
+      pixrange:
+        base: 7.3e-6
+        range: [-3.,22.]
+        colormap: 'gist_heat'
+        
+    dataset_02:
+      filename: 'img-C-J041836_avg-com_uv-rob0.fits'
+      dims: [0,1]
+      type: 'cntr'
+      contours:
+        base: 7.3e-6
+        levels: [-3,-2,3,6,9,12,15,18,21]
+        colors: 'lightgreen'
+
