@@ -128,7 +128,7 @@ export
 
 define Merge_Template
 # templates to prepare the data before the cleaning
-#  the first parameter is the band name, the second the source name
+#  paramters: 1 - band name, 2 - source name
 #
 $(eval log_merge := $(RES_DIR)/band_$(1)/merged/log_merge-$(1)-$(2))
 
@@ -155,7 +155,7 @@ endef
 
 define ChanAvg_Template
 # templates to prepare the data before the cleaning
-#  the first parameter is the band name, the second the source name
+#  parameters: 1 - band name, 2 - source name
 #
 $(eval mrg_dir := $(RES_DIR)/band_$(1)/merged)
 
@@ -203,7 +203,7 @@ endef
 
 define Clean_Template
 # template to clean data
-#  first parameter - band, second parameter - target, third - weight
+#  parameters: 1 - band, 2 - target, 3 - weight
 #
 # It includes the actions:
 #   dirty: to make a dirty map to estimate the map rms
@@ -334,7 +334,7 @@ endef
 define Target_Template
 # Template to create combinations of weights for targets and bands
 #
-# first parameter - band, second parameter - target
+# parameters: 1 - band, 2 - target
 #
 .PHONY: dirty-$(1) dirty-$(2)
 
@@ -365,7 +365,7 @@ endef
 define Combine_Template
 # template to combine data from different configurations
 #
-# the first parameter is the band, the second the source name
+# parameters: 1 - band, 2 - source name
 #
 $(eval comb_dir := $(RES_DIR)/band_$(1)/combined_BC/$(2))
 
@@ -453,39 +453,11 @@ endef
 
 
 
-#define MapsTemplate
-## Template to make maps of the fits files
-##
-## first parameter - band, second parameter - target, third parameter -
-## weight
-#
-#$(eval map_dir := $(RES_DIR)/band_$(1)/maps)
-#$(eval out_map := $(map_dir)/$(SNAME)-$(1)-$(2)-$(3).pdf)
-#
-#.PHONY: maps-$(1) maps-$(2)
-#.PHONY: maps-$(1)-$(2)
-#.PHONY: maps-$(1)-$(2)-$(3)
-#
-#maps-$(1): maps-$(1)-$(2)
-#maps-$(2): maps-$(1)-$(2)
-#
-#maps-$(1)-$(2): maps-$(1)-$(2)-$(3)
-#
-#maps-$(1)-$(2)-$(3): $(out_map)
-#
-#$(out_map): $(map_dir)/band_$(1)/img-$(1)-$(2)-$(3).fits
-#	@$(PYTHON_DIR)/dbxmap.py \
-#		-c $(CFG_DIR)/band_$(1)/map-$(1)-$(2)-$(3).yml \
-#		-l $(map_dir)/log_map-$(1)-$(2)-$(3)
-#
-#endef
-
-
 
 define Template_OnlyTarget
 # Template to create combination of weights only for targets
 #
-#  parameter - target
+#  parameter 1 - target
 #
 .PHONY: dirty
 
@@ -512,7 +484,7 @@ endef
 define Merge_Sources
 # Template to create merge list for sources
 #
-#  parameter - source
+#  parameter 1 - source
 #
 .PHONY: merge
 
@@ -525,7 +497,7 @@ endef
 define ChanAvg_Sources
 # Template to create chanavg list for sources
 #
-#  parameter - source
+#  parameter 1 - source
 #
 .PHONY: chanaverage
 
@@ -537,7 +509,7 @@ endef
 define Combine_Sources
 # Template to create combine list for sources
 #
-#  parameter - source
+#  parameter 1 - source
 #
 .PHONY: combine
 
