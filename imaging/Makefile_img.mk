@@ -16,7 +16,6 @@ BANDS := C X K
 SOURCES := J041757 J041836 J041847 J041938
 
 
-
 # Definition of targets
 #
 # for merging, combining data from two configurations, for averaging
@@ -52,14 +51,12 @@ ifneq ($(sfx_avg),)
 endif
 
 
-
 # definition of extra_targets for a source
 #
 #extra_target-J041836 = _xcd
 
 #extrad = $(foreach src,$(SOURCES),$(foreach xx,$(extra_target-$(src)),\
 #               $(addsuffix $(xx),$(src))))
-
 
 
 # definition of weights for cleaning
@@ -153,6 +150,7 @@ endef
 
 
 
+
 define ChanAvg_Template
 # templates to prepare the data before the cleaning
 #  parameters: 1 - band name, 2 - source name
@@ -183,6 +181,7 @@ endef
 
 
 
+
 define PlotData
 
 .PHONY: plot_data-$(1)-$(2)-$(3)
@@ -198,6 +197,7 @@ $(RES_DIR)/band_$(1)/maps/$(2)/plots-$(1)-$(2)-$(3).png:  $(RES_DIR)/band_$(1)/m
 	    -l $(RES_DIR)/band_$(1)/maps/$(2)/log_clean-$(1)-$(2)_view
 
 endef
+
 
 
 
@@ -331,6 +331,7 @@ endef
 
 
 
+
 define Target_Template
 # Template to create combinations of weights for targets and bands
 #
@@ -359,6 +360,7 @@ tofits-$(2): tofits-$(1)-$(2)
 plot_data-$(1)-$(2): $(plot_list-$(1)_$(2))
 
 endef
+
 
 
 
@@ -408,8 +410,6 @@ $(log_chanavg_comb): $(mrg_dir)/log_merge-$(1)-$(2)
 	    -c $(CFG_DIR)/band_$(1)/chanaverage_comb-$(1)-$(2).cfg \
 	    -w $(mrg_dir) \
 	    -l $(log_chanavg_comb)
-
-
 
 
 $(eval log_comb_viewdata := $(comb_dir)/log_comb_viewdata-$(1)-$(2))
@@ -481,6 +481,7 @@ endef
 
 
 
+
 define Merge_Sources
 # Template to create merge list for sources
 #
@@ -491,6 +492,7 @@ define Merge_Sources
 merge: merge-$(1)
 
 endef
+
 
 
 
@@ -506,6 +508,8 @@ chanaverage: chanaverage-$(1)
 endef
 
 
+
+
 define Combine_Sources
 # Template to create combine list for sources
 #
@@ -516,7 +520,6 @@ define Combine_Sources
 combine: combine-$(1)
 
 endef
-
 
 #
 #-- End of definition of templates ------------------------------------
