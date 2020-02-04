@@ -72,7 +72,7 @@ define Template_OnlyTarget
 #
 .PHONY: getflux
 
-maps: getflux-$(1)
+getflux: getflux-$(1)
 endef
 
 
