@@ -21,7 +21,7 @@ weights := natural rob0 uniform com_uv-natural com_uv-rob0 com_uv-uniform
 
 # definition of extra weights for a target and band
 #
-extra_weights-K-J041757_avg := taper_01 taper_02 taper_03
+extra_weights-K-J041757_avg := taper_01 taper_02
 #
 
 
